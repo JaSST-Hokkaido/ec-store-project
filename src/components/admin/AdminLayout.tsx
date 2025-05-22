@@ -12,6 +12,7 @@ import MemberPriceSettingPage from '../../pages/admin/MemberPriceSettingPage';
 import AccountManagementPage from '../../pages/admin/system/AccountManagementPage';
 import RoleManagementPage from '../../pages/admin/system/RoleManagementPage';
 import CategoryManagementPage from '../../pages/admin/system/CategoryManagementPage';
+import SystemAdminPromotionPage from '../../pages/admin/system/SystemAdminPromotionPage';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
 const AdminLayout: React.FC = () => {
@@ -224,6 +225,7 @@ const AdminLayout: React.FC = () => {
             <Route path="system/accounts" element={<AccountManagementPage />} />
             <Route path="system/roles" element={<RoleManagementPage />} />
             <Route path="system/categories" element={<CategoryManagementPage />} />
+            <Route path="system/admin-promotion" element={<SystemAdminPromotionPage />} />
             <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
           </Routes>
         </div>
