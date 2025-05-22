@@ -21,6 +21,7 @@ interface CartContextType {
   clearCart: () => void;
   getCartCount: () => number;
   getSubtotal: () => number;
+  getCartItems: () => CartItem[];
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -113,7 +114,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateQuantity,
         clearCart,
         getCartCount,
-        getSubtotal
+        getSubtotal,
+        getCartItems: () => [...cartItems]
       }}
     >
       {children}

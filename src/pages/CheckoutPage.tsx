@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 // 注文情報の型定義
 interface OrderSummary {
@@ -23,6 +25,7 @@ interface OrderSummary {
 interface AddressForm {
   firstName: string;
   lastName: string;
+  email: string; // ゲスト購入用のメールアドレス
   postalCode: string;
   prefecture: string;
   city: string;
@@ -33,8 +36,11 @@ interface AddressForm {
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, currentUser } = useAuth();
+  const { getCartItems, clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(1); // 1: 配送情報, 2: 支払い情報, 3: 注文確認
+  const [isGuest, setIsGuest] = useState(!isAuthenticated);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     subtotal: 0,
     shippingFee: 0,
@@ -45,14 +51,15 @@ const CheckoutPage: React.FC = () => {
   
   // 配送先住所フォーム
   const [addressForm, setAddressForm] = useState<AddressForm>({
-    firstName: '',
-    lastName: '',
-    postalCode: '',
-    prefecture: '',
-    city: '',
-    address1: '',
-    address2: '',
-    phone: ''
+    firstName: currentUser?.name?.split(' ')[1] || '',
+    lastName: currentUser?.name?.split(' ')[0] || '',
+    email: currentUser?.email || '',
+    postalCode: currentUser?.address?.postalCode || '',
+    prefecture: currentUser?.address?.prefecture || '',
+    city: currentUser?.address?.city || '',
+    address1: currentUser?.address?.address1 || '',
+    address2: currentUser?.address?.address2 || '',
+    phone: currentUser?.phone || ''
   });
   
   // 支払い方法
@@ -73,37 +80,38 @@ const CheckoutPage: React.FC = () => {
   // 利用規約同意
   const [termsAgreed, setTermsAgreed] = useState(false);
 
-  // 注文情報を取得（仮のデータ）
+  // カート情報を取得して注文情報を更新
   useEffect(() => {
-    // 実際はここでAPIやlocalStorageからカート情報を取得
-    const dummyOrderData: OrderSummary = {
-      subtotal: 7980, // 商品小計
-      shippingFee: 500, // 送料
-      tax: 798, // 消費税
-      total: 9278, // 合計金額
-      items: [
-        {
-          id: 1,
-          name: 'テクノベーシック Tシャツ',
-          price: 3500,
-          quantity: 2,
-          options: {
-            size: 'M',
-            color: 'ブラック'
-          }
-        },
-        {
-          id: 3,
-          name: 'JaSST Hokkaido ステッカーセット',
-          price: 980,
-          quantity: 1
-        }
-      ]
+    const cartItems = getCartItems();
+    
+    if (cartItems.length === 0) {
+      // カートが空の場合はカートページにリダイレクト
+      navigate('/cart');
+      return;
+    }
+    
+    // カート情報から注文情報を作成
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const tax = Math.floor(subtotal * 0.1); // 10%の消費税
+    const shippingFee = subtotal >= 10000 ? 0 : 500; // 1万円以上は送料無料
+    
+    const orderData: OrderSummary = {
+      subtotal,
+      shippingFee,
+      tax,
+      total: subtotal + shippingFee + tax,
+      items: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        options: item.options
+      }))
     };
     
-    setOrderSummary(dummyOrderData);
+    setOrderSummary(orderData);
     setIsLoading(false);
-  }, []);
+  }, [getCartItems, navigate]);
 
   // 住所フォームの変更ハンドラー
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -145,16 +153,25 @@ const CheckoutPage: React.FC = () => {
 
   // 注文確定ハンドラー
   const handlePlaceOrder = () => {
-    // 実際はここでAPIリクエストを送信して注文処理
-    console.log('注文情報:', {
+    // 注文情報を作成
+    const orderData = {
+      orderNumber: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+      orderDate: new Date().toISOString(),
       address: addressForm,
       payment: {
         method: paymentMethod,
         card: paymentMethod === 'credit-card' ? cardInfo : null
       },
       order: orderSummary,
-      usePoints: usePoints ? availablePoints : 0
-    });
+      usePoints: usePoints ? availablePoints : 0,
+      isGuest: isGuest
+    };
+    
+    // 注文情報をローカルストレージに保存（実際はAPIリクエストを送信）
+    localStorage.setItem('latestOrder', JSON.stringify(orderData));
+    
+    // カートをクリア
+    clearCart();
     
     // 注文完了ページへリダイレクト
     navigate('/order-complete');
@@ -162,6 +179,8 @@ const CheckoutPage: React.FC = () => {
 
   // 配送先フォームのバリデーション
   const validateAddressForm = () => {
+    const emailValid = !isGuest || (isGuest && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addressForm.email));
+    
     return (
       addressForm.firstName.trim() !== '' &&
       addressForm.lastName.trim() !== '' &&
@@ -169,7 +188,8 @@ const CheckoutPage: React.FC = () => {
       addressForm.prefecture.trim() !== '' &&
       addressForm.city.trim() !== '' &&
       addressForm.address1.trim() !== '' &&
-      addressForm.phone.trim() !== ''
+      addressForm.phone.trim() !== '' &&
+      emailValid
     );
   };
 
@@ -244,6 +264,15 @@ const CheckoutPage: React.FC = () => {
             {activeStep === 1 && (
               <div className="checkout-section">
                 <h2 className="section-title">配送先情報</h2>
+                
+                {!isAuthenticated && (
+                  <div className="guest-checkout-notice">
+                    <p>
+                      会員登録済みのお客様は <Link to={`/login?redirect=checkout`}>ログイン</Link> すると
+                      ポイントが貯まり、次回以降のお買い物がよりスムーズになります。
+                    </p>
+                  </div>
+                )}
                 <form className="address-form">
                   <div className="form-row">
                     <div className="form-group">
@@ -359,6 +388,23 @@ const CheckoutPage: React.FC = () => {
                       />
                     </div>
                   </div>
+                  
+                  {isGuest && (
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="email">メールアドレス (注文確認メールの送信先)</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={addressForm.email}
+                          onChange={handleAddressChange}
+                          placeholder="your@email.com"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
                 </form>
                 
                 <div className="form-actions">
@@ -520,6 +566,15 @@ const CheckoutPage: React.FC = () => {
               <div className="checkout-section">
                 <h2 className="section-title">注文内容の確認</h2>
                 
+                {isGuest && (
+                  <div className="confirmation-section">
+                    <h3>お客様情報</h3>
+                    <div className="confirmation-details">
+                      <p>メールアドレス: {addressForm.email}</p>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="confirmation-section">
                   <h3>配送先情報</h3>
                   <div className="confirmation-details">
@@ -552,30 +607,32 @@ const CheckoutPage: React.FC = () => {
                   </button>
                 </div>
                 
-                <div className="confirmation-section">
-                  <h3>ポイント利用</h3>
-                  <div className="confirmation-details">
-                    <div className="points-section">
-                      <p>利用可能ポイント: {availablePoints}ポイント</p>
-                      <div className="points-toggle">
-                        <input
-                          type="checkbox"
-                          id="use-points"
-                          checked={usePoints}
-                          onChange={handleTogglePoints}
-                        />
-                        <label htmlFor="use-points">
-                          ポイントを使用する (1ポイント = 1円)
-                        </label>
+                {!isGuest && (
+                  <div className="confirmation-section">
+                    <h3>ポイント利用</h3>
+                    <div className="confirmation-details">
+                      <div className="points-section">
+                        <p>利用可能ポイント: {availablePoints}ポイント</p>
+                        <div className="points-toggle">
+                          <input
+                            type="checkbox"
+                            id="use-points"
+                            checked={usePoints}
+                            onChange={handleTogglePoints}
+                          />
+                          <label htmlFor="use-points">
+                            ポイントを使用する (1ポイント = 1円)
+                          </label>
+                        </div>
+                        {usePoints && (
+                          <p className="points-used">
+                            {availablePoints}ポイントを使用 (-¥{availablePoints.toLocaleString()})
+                          </p>
+                        )}
                       </div>
-                      {usePoints && (
-                        <p className="points-used">
-                          {availablePoints}ポイントを使用 (-¥{availablePoints.toLocaleString()})
-                        </p>
-                      )}
                     </div>
                   </div>
-                </div>
+                )}
                 
                 <div className="terms-agreement">
                   <input
@@ -651,7 +708,7 @@ const CheckoutPage: React.FC = () => {
                   <span>¥{orderSummary.tax.toLocaleString()}</span>
                 </div>
                 
-                {usePoints && (
+                {usePoints && !isGuest && (
                   <div className="summary-row discount">
                     <span>ポイント使用</span>
                     <span>-¥{availablePoints.toLocaleString()}</span>
