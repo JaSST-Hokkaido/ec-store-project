@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ecstoreproject-dev-ba4bb-authRole",
+      "UnauthRoleArn": "arn:aws:iam::659528410261:role/amplify-ecstoreproject-dev-ba4bb-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::659528410261:role/amplify-ecstoreproject-dev-ba4bb-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-ecstoreproject-dev-ba4bb-deployment",
+      "UnauthRoleName": "amplify-ecstoreproject-dev-ba4bb-unauthRole",
+      "StackName": "amplify-ecstoreproject-dev-ba4bb",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:659528410261:stack/amplify-ecstoreproject-dev-ba4bb/699d8660-36e4-11f0-945a-0a0cbbce4fd1",
+      "AmplifyAppId": "d2j49m9ga0j9tz"
+    },
+    "categories": {
+      "auth": {
+        "ecstoreprojecta565ea79": {}
+      }
+    }
+  }
+}
