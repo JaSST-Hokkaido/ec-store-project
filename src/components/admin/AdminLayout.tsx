@@ -13,6 +13,9 @@ import AccountManagementPage from '../../pages/admin/system/AccountManagementPag
 import RoleManagementPage from '../../pages/admin/system/RoleManagementPage';
 import CategoryManagementPage from '../../pages/admin/system/CategoryManagementPage';
 import SystemAdminPromotionPage from '../../pages/admin/system/SystemAdminPromotionPage';
+import InquiryListPage from '../../pages/admin/support/InquiryListPage';
+import InquiryDetailPage from '../../pages/admin/support/InquiryDetailPage';
+import CustomerSearchPage from '../../pages/admin/support/CustomerSearchPage';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
 const AdminLayout: React.FC = () => {
@@ -133,10 +136,24 @@ const AdminLayout: React.FC = () => {
             {/* 問い合わせ管理 */}
             {checkPermission('manage_inquiries') || checkPermission('view_inquiries') ? (
               <li>
-                <Link to="/admin/inquiries" className={isActive('/admin/inquiries') ? 'active' : ''}>
+                <Link to="/admin/support/inquiries" className={isActive('/admin/support/inquiries') ? 'active' : ''}>
                   <span className="nav-icon">💬</span>
                   <span className="nav-text">問い合わせ管理</span>
                 </Link>
+                <ul className="subnav">
+                  <li>
+                    <Link to="/admin/support/inquiries" className={location.pathname === '/admin/support/inquiries' ? 'active' : ''}>
+                      <span className="nav-text">問い合わせ一覧</span>
+                    </Link>
+                  </li>
+                  {checkPermission('view_customers') && (
+                    <li>
+                      <Link to="/admin/support/customers" className={location.pathname === '/admin/support/customers' ? 'active' : ''}>
+                        <span className="nav-text">顧客情報検索</span>
+                      </Link>
+                    </li>
+                  )}
+                </ul>
               </li>
             ) : null}
             
@@ -222,6 +239,9 @@ const AdminLayout: React.FC = () => {
             <Route path="inventory" element={<InventoryManagementPage />} />
             <Route path="orders" element={<OrderListPage />} />
             <Route path="orders/:id" element={<OrderDetailPage />} />
+            <Route path="support/inquiries" element={<InquiryListPage />} />
+            <Route path="support/inquiries/:id" element={<InquiryDetailPage />} />
+            <Route path="support/customers" element={<CustomerSearchPage />} />
             <Route path="system/accounts" element={<AccountManagementPage />} />
             <Route path="system/roles" element={<RoleManagementPage />} />
             <Route path="system/categories" element={<CategoryManagementPage />} />
