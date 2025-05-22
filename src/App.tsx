@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import './styles/App.css';
 
 // コンポーネント
@@ -52,8 +52,15 @@ function App() {
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/reset-password" element={<LoginPage resetMode={true} />} />
               <Route path="/mypage/*" element={<MyPage />} />
+              <Route path="/reset-password" element={<LoginPage resetMode={true} />} />
+              <Route path="/account-closure-complete" element={<div className="container">
+                <div className="auth-success">
+                  <h1>退会処理が完了しました</h1>
+                  <p>ご利用いただきありがとうございました。</p>
+                  <Link to="/" className="btn">トップページに戻る</Link>
+                </div>
+              </div>} />
               <Route path="/order-complete" element={<OrderCompletePage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
