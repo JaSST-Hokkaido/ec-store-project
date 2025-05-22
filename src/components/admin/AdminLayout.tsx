@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Navigate, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, Link, useNavigate, useLocation, Routes, Route } from 'react-router-dom';
+import DashboardPage from '../../pages/admin/DashboardPage';
+import ProductListPage from '../../pages/admin/ProductListPage';
+import ProductCreatePage from '../../pages/admin/ProductCreatePage';
+import AccountManagementPage from '../../pages/admin/system/AccountManagementPage';
+import RoleManagementPage from '../../pages/admin/system/RoleManagementPage';
+import CategoryManagementPage from '../../pages/admin/system/CategoryManagementPage';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
 const AdminLayout: React.FC = () => {
@@ -199,7 +205,15 @@ const AdminLayout: React.FC = () => {
         </div>
         
         <div className="admin-content">
-          <Outlet />
+          <Routes>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="products" element={<ProductListPage />} />
+            <Route path="products/new" element={<ProductCreatePage />} />
+            <Route path="system/accounts" element={<AccountManagementPage />} />
+            <Route path="system/roles" element={<RoleManagementPage />} />
+            <Route path="system/categories" element={<CategoryManagementPage />} />
+            <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+          </Routes>
         </div>
       </div>
     </div>
