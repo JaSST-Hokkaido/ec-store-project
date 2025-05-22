@@ -3,6 +3,10 @@ import { Navigate, Outlet, Link, useNavigate, useLocation, Routes, Route } from 
 import DashboardPage from '../../pages/admin/DashboardPage';
 import ProductListPage from '../../pages/admin/ProductListPage';
 import ProductCreatePage from '../../pages/admin/ProductCreatePage';
+import ProductEditPage from '../../pages/admin/ProductEditPage';
+import InventoryManagementPage from '../../pages/admin/InventoryManagementPage';
+import OrderListPage from '../../pages/admin/OrderListPage';
+import OrderDetailPage from '../../pages/admin/OrderDetailPage';
 import AccountManagementPage from '../../pages/admin/system/AccountManagementPage';
 import RoleManagementPage from '../../pages/admin/system/RoleManagementPage';
 import CategoryManagementPage from '../../pages/admin/system/CategoryManagementPage';
@@ -209,6 +213,10 @@ const AdminLayout: React.FC = () => {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="products" element={<ProductListPage />} />
             <Route path="products/new" element={<ProductCreatePage />} />
+            <Route path="products/edit/:id" element={<ProductEditPage />} />
+            <Route path="inventory" element={<InventoryManagementPage />} />
+            <Route path="orders" element={<OrderListPage />} />
+            <Route path="orders/:id" element={<OrderDetailPage />} />
             <Route path="system/accounts" element={<AccountManagementPage />} />
             <Route path="system/roles" element={<RoleManagementPage />} />
             <Route path="system/categories" element={<CategoryManagementPage />} />
