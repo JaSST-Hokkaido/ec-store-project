@@ -1,0 +1,287 @@
+/* 認証関連ページのスタイリング（ログイン、会員登録、パスワードリセットなど） */
+
+/* 共通レイアウト */
+.auth-page {
+  padding: var(--spacing-xl) 0;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.auth-container {
+  background-color: var(--color-light);
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.auth-header h1 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-dark);
+  font-size: var(--font-size-2xl);
+}
+
+.auth-header p {
+  color: var(--color-secondary);
+  font-size: var(--font-size-md);
+}
+
+/* フォーム要素 */
+.auth-form {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  color: var(--color-dark);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  font-size: var(--font-size-md);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: var(--spacing-md) 0;
+}
+
+.password-reset-link {
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+}
+
+.password-reset-link:hover {
+  text-decoration: underline;
+}
+
+.form-terms {
+  display: flex;
+  align-items: flex-start;
+  margin: var(--spacing-md) 0;
+  gap: var(--spacing-sm);
+}
+
+.form-terms input[type="checkbox"] {
+  margin-top: 3px;
+}
+
+.form-terms label {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+}
+
+.form-terms a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.form-terms a:hover {
+  text-decoration: underline;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.remember-me label {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+}
+
+/* ボタン */
+.auth-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: var(--font-size-md);
+}
+
+/* エラーとメッセージ */
+.auth-error {
+  background-color: rgba(var(--color-error-rgb), 0.1);
+  color: var(--color-error);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 4px;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.auth-success {
+  background-color: rgba(var(--color-success-rgb), 0.1);
+  color: var(--color-success);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 4px;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+/* 区切り線 */
+.auth-divider {
+  position: relative;
+  text-align: center;
+  margin: var(--spacing-md) 0;
+}
+
+.auth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e1e1e1;
+}
+
+.auth-divider span {
+  position: relative;
+  padding: 0 var(--spacing-sm);
+  background-color: var(--color-light);
+  color: var(--color-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* ソーシャルログイン */
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  background-color: var(--color-light);
+  border: 1px solid #e1e1e1;
+  color: var(--color-dark);
+}
+
+.social-btn:hover {
+  background-color: #f5f5f5;
+  color: var(--color-dark);
+}
+
+.social-btn.google {
+  border-color: #4285F4;
+}
+
+.social-btn.facebook {
+  border-color: #3b5998;
+}
+
+.social-icon {
+  font-weight: bold;
+}
+
+/* フッター */
+.auth-footer {
+  text-align: center;
+  border-top: 1px solid #f1f1f1;
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.auth-footer p {
+  color: var(--color-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* 登録成功ページ */
+.register-success-page .success-message {
+  text-align: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: var(--color-success);
+  margin-bottom: var(--spacing-md);
+}
+
+/* 住所フィールド */
+.address-toggle {
+  margin-bottom: var(--spacing-md);
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 0;
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+}
+
+.address-fields {
+  border-top: 1px solid #f1f1f1;
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: var(--spacing-lg);
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: var(--spacing-md);
+    box-shadow: none;
+    background-color: transparent;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .social-login {
+    gap: var(--spacing-md);
+  }
+}
