@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,18 +22,13 @@ const CartPage: React.FC = () => {
     removeFromCart(id);
   };
 
+  const { isAuthenticated } = useAuth();
+  
   // チェックアウトへ進むハンドラー
   const handleProceedToCheckout = () => {
-    // 仮のログイン状態チェック（後でContextから取得）
-    const isLoggedIn = false;
-    
-    if (isLoggedIn) {
-      navigate('/checkout');
-    } else {
-      navigate('/login?redirect=checkout');
-    }
+    navigate('/checkout');
   };
-
+  
 
   if (cartItems.length === 0) {
     return (
@@ -58,6 +54,27 @@ const CartPage: React.FC = () => {
         <h1 className="page-title">ショッピングカート</h1>
         
         <div className="cart-container">
+          <div className="cart-steps">
+            <div className="cart-step active">
+              <span className="step-number">1</span>
+              <span className="step-label">カート</span>
+            </div>
+            <div className="step-divider"></div>
+            <div className="cart-step">
+              <span className="step-number">2</span>
+              <span className="step-label">お届け先・支払方法</span>
+            </div>
+            <div className="step-divider"></div>
+            <div className="cart-step">
+              <span className="step-number">3</span>
+              <span className="step-label">注文確認</span>
+            </div>
+            <div className="step-divider"></div>
+            <div className="cart-step">
+              <span className="step-number">4</span>
+              <span className="step-label">完了</span>
+            </div>
+          </div>
           <div className="cart-items">
             <div className="cart-header">
               <div className="cart-header-product">商品</div>
@@ -71,7 +88,7 @@ const CartPage: React.FC = () => {
               <div className="cart-item" key={item.id}>
                 <div className="cart-item-product">
                   <div className="cart-item-image">
-                    <img src={item.imageUrl} alt={item.name} />
+                    <img src={item.imageUrl || "https://placehold.jp/300x200.png"} alt={item.name} />
                   </div>
                   <div className="cart-item-details">
                     <h3 className="cart-item-name">{item.name}</h3>
@@ -150,12 +167,21 @@ const CartPage: React.FC = () => {
               <span>¥{total.toLocaleString()}</span>
             </div>
             
-            <button 
-              className="btn checkout-btn" 
-              onClick={handleProceedToCheckout}
-            >
-              レジに進む
-            </button>
+              <button 
+                className="btn primary checkout-btn" 
+                onClick={handleProceedToCheckout}
+              >
+                レジに進む
+              </button>
+              
+              {!isAuthenticated && (
+                <div className="login-suggestion">
+                  <Link to="/login?redirect=cart" className="login-link">
+                    ログイン
+                  </Link>
+                  するとポイントが貯まります
+                </div>
+              )}
             
             <div className="continue-shopping">
               <Link to="/products" className="continue-link">
