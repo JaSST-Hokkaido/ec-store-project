@@ -20,7 +20,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // コンテキスト
 import { CartProvider } from './context/CartContext';
-// import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,26 +39,29 @@ function App() {
   }
 
   return (
-    <CartProvider>
-      <div className="app">
-        <Header />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/products" element={<ProductListPage />} />
-            <Route path="/products/:id" element={<ProductDetailPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/mypage/*" element={<MyPage />} />
-            <Route path="/order-complete" element={<OrderCompletePage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <div className="app">
+          <Header />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/products" element={<ProductListPage />} />
+              <Route path="/products/:id" element={<ProductDetailPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/reset-password" element={<LoginPage resetMode={true} />} />
+              <Route path="/mypage/*" element={<MyPage />} />
+              <Route path="/order-complete" element={<OrderCompletePage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

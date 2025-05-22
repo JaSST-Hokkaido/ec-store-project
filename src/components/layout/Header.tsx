@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -8,10 +9,8 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { getCartCount } = useCart();
+  const { isAuthenticated, currentUser, logout } = useAuth();
   const cartCount = getCartCount();
-
-  // 仮のログイン状態（後でContextから取得）
-  const isLoggedIn = false;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,11 +63,17 @@ const Header: React.FC = () => {
 
         {/* ヘッダーアクション */}
         <div className="header-actions">
-          {isLoggedIn ? (
-            <Link to="/mypage" className="header-action">
+          {isAuthenticated ? (
+            <div className="header-action dropdown">
               <span className="icon">👤</span>
-              <span className="action-text">マイページ</span>
-            </Link>
+              <span className="action-text">{currentUser?.name || 'マイページ'}</span>
+              <div className="dropdown-content">
+                <Link to="/mypage">マイページ</Link>
+                <Link to="/mypage/orders">注文履歴</Link>
+                <Link to="/mypage/points">ポイント</Link>
+                <button onClick={logout}>ログアウト</button>
+              </div>
+            </div>
           ) : (
             <Link to="/login" className="header-action">
               <span className="icon">🔑</span>
@@ -107,12 +112,25 @@ const Header: React.FC = () => {
                 <Link to="/contact" className="mobile-nav-link" onClick={toggleMenu}>お問い合わせ</Link>
               </li>
               <li className="mobile-nav-item">
-                {isLoggedIn ? (
+                {isAuthenticated ? (
                   <Link to="/mypage" className="mobile-nav-link" onClick={toggleMenu}>マイページ</Link>
                 ) : (
                   <Link to="/login" className="mobile-nav-link" onClick={toggleMenu}>ログイン</Link>
                 )}
               </li>
+              {isAuthenticated && (
+                <li className="mobile-nav-item">
+                  <button 
+                    className="mobile-nav-link logout-button" 
+                    onClick={() => {
+                      logout();
+                      toggleMenu();
+                    }}
+                  >
+                    ログアウト
+                  </button>
+                </li>
+              )}
               <li className="mobile-nav-item">
                 <Link to="/cart" className="mobile-nav-link" onClick={toggleMenu}>
                   カート {cartCount > 0 && `(${cartCount})`}

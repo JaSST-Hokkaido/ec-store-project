@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  resetMode?: boolean;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ resetMode = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const { login, resetPassword } = useAuth();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // URLからリダイレクト先を取得
-  const searchParams = new URLSearchParams(location.search);
+  
+  // URLからリダイレクト先とリセットトークンを取得
   const redirectTo = searchParams.get('redirect') || '/';
+  const resetToken = searchParams.get('token');
+  const resetEmail = searchParams.get('email');
+  
+  // リセットトークンがある場合はパスワードリセットモードにする
+  useEffect(() => {
+    if (resetToken && resetEmail) {
+      setEmail(resetEmail);
+    }
+  }, [resetToken, resetEmail]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // ログインフォーム送信処理
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email.trim() || !password.trim()) {
@@ -26,14 +44,15 @@ const LoginPage: React.FC = () => {
     setError('');
     
     try {
-      // AWS Amplify Authでの認証を実装予定
-      // await Auth.signIn(email, password);
+      const result = await login(email, password, rememberMe);
       
-      // 認証成功（開発中はダミーデータで代用）
-      console.log('ログイン成功:', email);
-      
-      // リダイレクト先に遷移
-      navigate(redirectTo === 'checkout' ? '/checkout' : `/${redirectTo}`);
+      if (result.success) {
+        // ログイン成功
+        navigate(redirectTo === 'checkout' ? '/checkout' : `/${redirectTo}`);
+      } else {
+        // ログイン失敗
+        setError(result.message || 'ログインに失敗しました');
+      }
     } catch (err: any) {
       console.error('ログインエラー:', err);
       setError(err.message || 'ログインに失敗しました。もう一度お試しください。');
@@ -41,7 +60,97 @@ const LoginPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+  
+  // パスワードリセットフォーム送信処理
+  const handleResetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email.trim()) {
+      setError('メールアドレスを入力してください');
+      return;
+    }
+    
+    setIsLoading(true);
+    setError('');
+    setSuccessMessage('');
+    
+    try {
+      const result = await resetPassword(email);
+      
+      if (result.success) {
+        setSuccessMessage(result.message || 'パスワードリセットのリンクをメールで送信しました');
+        // デモ用にコンソールにリンクを出力
+        console.log(`パスワードリセットのリンクを ${email} に送信しました`);
+      } else {
+        setError(result.message || 'パスワードリセットに失敗しました');
+      }
+    } catch (err: any) {
+      console.error('パスワードリセットエラー:', err);
+      setError(err.message || 'パスワードリセットに失敗しました。もう一度お試しください。');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // パスワードリセットページをレンダリング
+  if (resetMode) {
+    return (
+      <div className="auth-page reset-password-page">
+        <div className="container">
+          <div className="auth-container">
+            <div className="auth-header">
+              <h1>パスワードリセット</h1>
+              <p>登録したメールアドレスを入力してください</p>
+            </div>
+            
+            {error && (
+              <div className="auth-error">
+                {error}
+              </div>
+            )}
+            
+            {successMessage && (
+              <div className="auth-success">
+                {successMessage}
+              </div>
+            )}
+            
+            <form className="auth-form" onSubmit={handleResetSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">メールアドレス</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+              
+              <button 
+                type="submit" 
+                className="btn auth-btn" 
+                disabled={isLoading}
+              >
+                {isLoading ? '送信中...' : 'リセットリンクを送信'}
+              </button>
+            </form>
+            
+            <div className="auth-footer">
+              <p>
+                <Link to="/login">
+                  ログインページに戻る
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ログインページをレンダリング
   return (
     <div className="auth-page login-page">
       <div className="container">
@@ -57,7 +166,7 @@ const LoginPage: React.FC = () => {
             </div>
           )}
           
-          <form className="auth-form" onSubmit={handleSubmit}>
+          <form className="auth-form" onSubmit={handleLoginSubmit}>
             <div className="form-group">
               <label htmlFor="email">メールアドレス</label>
               <input
@@ -83,7 +192,17 @@ const LoginPage: React.FC = () => {
             </div>
             
             <div className="form-actions">
-              <Link to="/password-reset" className="password-reset-link">
+              <div className="remember-me">
+                <input
+                  type="checkbox"
+                  id="remember-me"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <label htmlFor="remember-me">ログイン状態を保持する</label>
+              </div>
+              
+              <Link to="/reset-password" className="password-reset-link">
                 パスワードをお忘れですか？
               </Link>
             </div>
