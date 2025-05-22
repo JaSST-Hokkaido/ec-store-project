@@ -1,0 +1,798 @@
+/* チェックアウトページのスタイル */
+.checkout-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* チェックアウトステップ */
+.checkout-steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.checkout-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.checkout-step.active .step-number {
+  background-color: #007bff;
+  color: white;
+}
+
+.step-title {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.checkout-step.active .step-title {
+  color: #333;
+  font-weight: 500;
+}
+
+.step-divider {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #e9ecef;
+  margin: 0 10px;
+  max-width: 100px;
+}
+
+/* チェックアウトコンテナ */
+.checkout-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.checkout-main {
+  flex: 1 1 600px;
+}
+
+.checkout-sidebar {
+  flex: 0 0 350px;
+}
+
+.checkout-section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* ゲスト購入通知 */
+.guest-checkout-notice {
+  background-color: #e9f5ff;
+  border-left: 4px solid #007bff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.guest-checkout-notice p {
+  margin: 0;
+}
+
+.guest-checkout-notice a {
+  color: #007bff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.guest-checkout-notice a:hover {
+  text-decoration: underline;
+}
+
+/* 住所フォーム */
+.address-form {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1 1 250px;
+}
+
+.form-group.half-width {
+  flex: 0 0 calc(50% - 8px);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* 支払い方法 */
+.payment-methods {
+  margin-bottom: 20px;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.payment-method input[type="radio"] {
+  margin-right: 10px;
+}
+
+.payment-method label {
+  font-weight: 500;
+}
+
+/* クレジットカードフォーム */
+.credit-card-form {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.credit-card-form h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.card-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.card-icon {
+  padding: 5px 10px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* 銀行振込情報 */
+.bank-transfer-info,
+.convenience-store-info {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.bank-transfer-info h3,
+.convenience-store-info h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* 注文確認 */
+.confirmation-section {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.confirmation-section h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.confirmation-details {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.confirmation-details p {
+  margin: 5px 0;
+}
+
+.edit-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.edit-button:hover {
+  text-decoration: underline;
+}
+
+/* ポイント利用セクション */
+.points-section {
+  padding: 10px 0;
+}
+
+.points-toggle {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.points-toggle input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.points-used {
+  color: #28a745;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* 利用規約同意 */
+.terms-agreement {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.terms-agreement input[type="checkbox"] {
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+.terms-agreement label {
+  font-size: 0.9rem;
+}
+
+.terms-agreement a {
+  color: #007bff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.terms-agreement a:hover {
+  text-decoration: underline;
+}
+
+/* フォームアクション */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* 注文サマリー */
+.order-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.summary-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 1.3rem;
+}
+
+.order-items {
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  margin: 0 0 5px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.item-options {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.item-options span {
+  margin-right: 10px;
+}
+
+.item-quantity {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.item-price {
+  font-weight: 500;
+  flex: 0 0 auto;
+  margin-left: 10px;
+}
+
+.summary-details {
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.summary-row.discount {
+  color: #28a745;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+}
+
+/* 会員特典セクション */
+.member-benefits {
+  background-color: #f0f9ff;
+  border: 1px solid #b3e0ff;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.member-benefits h3 {
+  color: #0066cc;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.benefit-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefit-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.benefit-list li:before {
+  content: "✓";
+  color: #28a745;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* クーポン適用セクション */
+.coupon-section {
+  margin: 20px 0;
+}
+
+.coupon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.coupon-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.coupon-toggle {
+  font-size: 0.9rem;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.coupon-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+.coupon-form input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.9rem;
+}
+
+.coupon-form button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.applied-coupon {
+  background-color: #e8f4f8;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coupon-info {
+  flex: 1;
+}
+
+.coupon-name {
+  font-weight: 500;
+  margin: 0 0 5px;
+}
+
+.coupon-discount {
+  color: #28a745;
+  font-size: 0.9rem;
+}
+
+.remove-coupon {
+  color: #dc3545;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* メディアクエリ */
+@media (max-width: 768px) {
+  .checkout-container {
+    flex-direction: column;
+  }
+  
+  .checkout-sidebar {
+    order: -1;
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-group {
+    flex: 0 0 100%;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+  
+  .order-summary {
+    position: static;
+  }
+}
+
+/* 注文完了ページのスタイル */
+.order-complete-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.order-complete-content {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  margin: 0 auto 20px;
+}
+
+.order-complete-content h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.success-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.order-details {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.order-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.order-info-row:last-child {
+  margin-bottom: 0;
+}
+
+.order-info-row .label {
+  font-weight: 500;
+  color: #666;
+}
+
+.order-info-row .value {
+  font-weight: bold;
+}
+
+.delivery-info {
+  margin-bottom: 30px;
+}
+
+.delivery-info h2 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.order-complete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.customer-support {
+  margin-bottom: 30px;
+  text-align: left;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.customer-support h3 {
+  margin-bottom: 15px;
+}
+
+.contact-phone {
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.guest-order-note {
+  background-color: #f0f9ff;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.guest-order-note h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #0066cc;
+}
+
+.guest-order-note .btn {
+  margin-top: 15px;
+}
+
+/* 注文詳細セクション */
+.order-products {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.order-products h2 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.product-list {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-item {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.product-image {
+  flex: 0 0 80px;
+  margin-right: 15px;
+}
+
+.product-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-name {
+  font-weight: 500;
+  margin: 0 0 5px;
+}
+
+.product-options {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.product-price-qty {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.order-summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+  font-weight: 500;
+}
+
+/* スペシャルオファーセクション（会員のみ） */
+.special-offers {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e9ecef;
+}
+
+.special-offers h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.offer-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.offer-image {
+  height: 120px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offer-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.offer-details {
+  padding: 10px;
+}
+
+.offer-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 5px;
+}
+
+.offer-price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+
+.offer-original-price {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-decoration: line-through;
+  margin-left: 5px;
+}
