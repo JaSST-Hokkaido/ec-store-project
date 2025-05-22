@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, getSubtotal } = useCart();
+  const { isAuthenticated } = useAuth();
   
   // 合計金額の計算
   const subtotal = getSubtotal();
@@ -14,21 +15,20 @@ const CartPage: React.FC = () => {
 
   // 数量変更のハンドラー
   const handleQuantityChange = (id: number, newQuantity: number) => {
-    updateQuantity(id, newQuantity);
+    if (newQuantity > 0) {
+      updateQuantity(id, newQuantity);
+    }
   };
 
   // 商品削除のハンドラー
   const handleRemoveItem = (id: number) => {
     removeFromCart(id);
   };
-
-  const { isAuthenticated } = useAuth();
   
   // チェックアウトへ進むハンドラー
   const handleProceedToCheckout = () => {
     navigate('/checkout');
   };
-  
 
   if (cartItems.length === 0) {
     return (
@@ -53,91 +53,94 @@ const CartPage: React.FC = () => {
       <div className="container">
         <h1 className="page-title">ショッピングカート</h1>
         
-        <div className="cart-container">
-          <div className="cart-steps">
-            <div className="cart-step active">
-              <span className="step-number">1</span>
-              <span className="step-label">カート</span>
-            </div>
-            <div className="step-divider"></div>
-            <div className="cart-step">
-              <span className="step-number">2</span>
-              <span className="step-label">お届け先・支払方法</span>
-            </div>
-            <div className="step-divider"></div>
-            <div className="cart-step">
-              <span className="step-number">3</span>
-              <span className="step-label">注文確認</span>
-            </div>
-            <div className="step-divider"></div>
-            <div className="cart-step">
-              <span className="step-number">4</span>
-              <span className="step-label">完了</span>
-            </div>
+        {/* カートのステップ表示 */}
+        <div className="cart-steps">
+          <div className="cart-step active">
+            <div className="step-number">1</div>
+            <div className="step-label">カート</div>
           </div>
+          <div className="step-divider"></div>
+          <div className="cart-step">
+            <div className="step-number">2</div>
+            <div className="step-label">お届け先・支払方法</div>
+          </div>
+          <div className="step-divider"></div>
+          <div className="cart-step">
+            <div className="step-number">3</div>
+            <div className="step-label">注文確認</div>
+          </div>
+          <div className="step-divider"></div>
+          <div className="cart-step">
+            <div className="step-number">4</div>
+            <div className="step-label">完了</div>
+          </div>
+        </div>
+        
+        <div className="cart-container">
+          {/* カート商品一覧 */}
           <div className="cart-items">
-            <div className="cart-header">
-              <div className="cart-header-product">商品</div>
-              <div className="cart-header-price">価格</div>
-              <div className="cart-header-quantity">数量</div>
-              <div className="cart-header-total">小計</div>
-              <div className="cart-header-action"></div>
-            </div>
-            
-            {cartItems.map(item => (
-              <div className="cart-item" key={item.id}>
-                <div className="cart-item-product">
-                  <div className="cart-item-image">
-                    <img src={item.imageUrl || "https://placehold.jp/300x200.png"} alt={item.name} />
-                  </div>
-                  <div className="cart-item-details">
-                    <h3 className="cart-item-name">{item.name}</h3>
-                    {item.options && (
-                      <div className="cart-item-options">
-                        {item.options.size && <span>サイズ: {item.options.size}</span>}
-                        {item.options.color && <span>カラー: {item.options.color}</span>}
+            <table className="cart-table">
+              <thead>
+                <tr>
+                  <th>商品</th>
+                  <th>価格</th>
+                  <th>数量</th>
+                  <th>小計</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartItems.map(item => (
+                  <tr key={item.id} className="cart-item-row">
+                    <td className="product-cell">
+                      <div className="product-info">
+                        <img src={item.imageUrl || "https://placehold.jp/300x200.png"} alt={item.name} className="product-image" />
+                        <div className="product-details">
+                          <h3 className="product-name">{item.name}</h3>
+                          {item.options && (
+                            <div className="product-options">
+                              {item.options.size && <span>サイズ: {item.options.size}</span>}
+                              {item.options.color && <span>カラー: {item.options.color}</span>}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="cart-item-price">
-                  ¥{item.price.toLocaleString()}
-                </div>
-                
-                <div className="cart-item-quantity">
-                  <button 
-                    className="quantity-btn" 
-                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                    disabled={item.quantity <= 1}
-                  >
-                    -
-                  </button>
-                  <span className="quantity-value">{item.quantity}</span>
-                  <button 
-                    className="quantity-btn" 
-                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                  >
-                    +
-                  </button>
-                </div>
-                
-                <div className="cart-item-subtotal">
-                  ¥{(item.price * item.quantity).toLocaleString()}
-                </div>
-                
-                <div className="cart-item-remove">
-                  <button 
-                    className="remove-btn" 
-                    onClick={() => handleRemoveItem(item.id)}
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-            ))}
+                    </td>
+                    <td className="price-cell">¥{item.price.toLocaleString()}</td>
+                    <td className="quantity-cell">
+                      <div className="quantity-controls">
+                        <button 
+                          className="quantity-btn"
+                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >-</button>
+                        <input
+                          type="text"
+                          className="quantity-input"
+                          value={item.quantity}
+                          readOnly
+                        />
+                        <button 
+                          className="quantity-btn"
+                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                        >+</button>
+                      </div>
+                    </td>
+                    <td className="subtotal-cell">¥{(item.price * item.quantity).toLocaleString()}</td>
+                    <td className="remove-cell">
+                      <button 
+                        className="remove-btn"
+                        onClick={() => handleRemoveItem(item.id)}
+                        aria-label="商品を削除"
+                      >×</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           
+          {/* 注文サマリー */}
           <div className="cart-summary">
             <h2 className="summary-title">注文内容</h2>
             
@@ -167,22 +170,22 @@ const CartPage: React.FC = () => {
               <span>¥{total.toLocaleString()}</span>
             </div>
             
-              <button 
-                className="btn primary checkout-btn" 
-                onClick={handleProceedToCheckout}
-              >
-                レジに進む
-              </button>
-              
-              {!isAuthenticated && (
-                <div className="login-suggestion">
-                  <Link to="/login?redirect=cart" className="login-link">
-                    ログイン
-                  </Link>
-                  するとポイントが貯まります
-                </div>
-              )}
+            <button 
+              className="btn checkout-btn" 
+              onClick={handleProceedToCheckout}
+            >
+              レジに進む
+            </button>
             
+            {!isAuthenticated && (
+              <div className="login-suggestion">
+                <Link to="/login?redirect=cart" className="login-link">
+                  ログイン
+                </Link>
+                するとポイントが貯まります
+              </div>
+            )}
+          
             <div className="continue-shopping">
               <Link to="/products" className="continue-link">
                 買い物を続ける
