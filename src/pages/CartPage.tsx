@@ -1,71 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-// カート用のデータ型
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-  options?: {
-    size?: string;
-    color?: string;
-  };
-}
+import { useCart } from '../context/CartContext';
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // テスト用のダミーデータ
-  useEffect(() => {
-    // 実際のアプリでは、LocalStorageやContextからカートデータを取得
-    const dummyCartItems: CartItem[] = [
-      {
-        id: 1,
-        name: 'テクノベーシック Tシャツ',
-        price: 3500,
-        imageUrl: 'https://placehold.jp/300x200.png',
-        quantity: 2,
-        options: {
-          size: 'M',
-          color: 'ブラック'
-        }
-      },
-      {
-        id: 3,
-        name: 'JaSST Hokkaido ステッカーセット',
-        price: 980,
-        imageUrl: 'https://placehold.jp/300x200.png',
-        quantity: 1
-      }
-    ];
-
-    setCartItems(dummyCartItems);
-    setIsLoading(false);
-  }, []);
-
+  const { cartItems, updateQuantity, removeFromCart, getSubtotal } = useCart();
+  
   // 合計金額の計算
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = getSubtotal();
   const shippingFee = subtotal >= 5000 ? 0 : 500; // 5000円以上で送料無料
   const total = subtotal + shippingFee;
 
   // 数量変更のハンドラー
   const handleQuantityChange = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    updateQuantity(id, newQuantity);
   };
 
   // 商品削除のハンドラー
   const handleRemoveItem = (id: number) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    removeFromCart(id);
   };
 
   // チェックアウトへ進むハンドラー
@@ -80,9 +33,6 @@ const CartPage: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <div className="loading">読み込み中...</div>;
-  }
 
   if (cartItems.length === 0) {
     return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 // ダミーデータ（後でAPI連携に置き換え）
 const products = [
@@ -86,10 +86,65 @@ const categories = [
 ];
 
 const ProductListPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [selectedCategory, setSelectedCategory] = useState('すべて');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
+  
+  // URLからパラメータを取得して状態を設定
+  useEffect(() => {
+    const category = searchParams.get('category');
+    const search = searchParams.get('search');
+    const sort = searchParams.get('sort');
+    
+    if (category) {
+      setSelectedCategory(category);
+    }
+    
+    if (search) {
+      setSearchQuery(search);
+    }
+    
+    if (sort) {
+      setSortOption(sort);
+    }
+  }, [searchParams]);
+
+  // フィルターや検索が変更されたらURLを更新
+  const updateSearchParams = (params: {
+    category?: string;
+    search?: string;
+    sort?: string;
+  }) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    
+    if (params.category) {
+      if (params.category === 'すべて') {
+        newSearchParams.delete('category');
+      } else {
+        newSearchParams.set('category', params.category);
+      }
+    }
+    
+    if (params.search !== undefined) {
+      if (params.search === '') {
+        newSearchParams.delete('search');
+      } else {
+        newSearchParams.set('search', params.search);
+      }
+    }
+    
+    if (params.sort) {
+      if (params.sort === 'default') {
+        newSearchParams.delete('sort');
+      } else {
+        newSearchParams.set('sort', params.sort);
+      }
+    }
+    
+    setSearchParams(newSearchParams);
+  };
 
   useEffect(() => {
     let result = [...products];
@@ -139,13 +194,19 @@ const ProductListPage: React.FC = () => {
 
         <div className="product-filters">
           <div className="search-container">
-            <input
-              type="text"
-              placeholder="商品名、カテゴリーなどで検索"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              updateSearchParams({ search: searchQuery });
+            }}>
+              <input
+                type="text"
+                placeholder="商品名、カテゴリーなどで検索"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">検索</button>
+            </form>
           </div>
 
           <div className="filter-options">
@@ -153,7 +214,11 @@ const ProductListPage: React.FC = () => {
               <label>カテゴリー:</label>
               <select 
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => {
+                  const newCategory = e.target.value;
+                  setSelectedCategory(newCategory);
+                  updateSearchParams({ category: newCategory });
+                }}
                 className="filter-select"
               >
                 {categories.map(category => (
@@ -168,7 +233,11 @@ const ProductListPage: React.FC = () => {
               <label>並び替え:</label>
               <select 
                 value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
+                onChange={(e) => {
+                  const newSort = e.target.value;
+                  setSortOption(newSort);
+                  updateSearchParams({ sort: newSort });
+                }}
                 className="filter-select"
               >
                 <option value="default">おすすめ順</option>

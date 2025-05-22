@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 // ダミーデータ（後でAPI連携に置き換え）
 const products = [
@@ -129,13 +130,24 @@ const ProductDetailPage: React.FC = () => {
     });
   };
 
+  const { addToCart } = useCart();
+
   const handleAddToCart = () => {
     if (!product) return;
     
-    // ここでカートに追加するロジックを実装（後で）
+    // カートに商品を追加
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      quantity: quantity,
+      options: product.category === 'アパレル' ? selectedOptions : undefined
+    });
+    
     alert(`${product.name}を${quantity}個カートに追加しました。`);
     
-    // カート画面に遷移
+    // カート画面に遷移するオプション
     // navigate('/cart');
   };
 

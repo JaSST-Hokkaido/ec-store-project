@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 仮のカート数（後でContextから取得）
-  const cartCount = 0;
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
   // 仮のログイン状態（後でContextから取得）
   const isLoggedIn = false;
