@@ -93,12 +93,11 @@
   border-radius: 8px 8px 0 0;
   font-weight: bold;
   color: #495057;
-  display: none; /* モバイルでは非表示 */
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .cart-header {
-    display: grid;
+    display: none;
   }
 }
 
@@ -113,7 +112,9 @@
 /* カート商品アイテム */
 .cart-item {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 3fr 1fr 1fr 1fr 50px;
+  gap: 15px;
+  align-items: center;
   padding: 20px;
   margin-bottom: 15px;
   background-color: #fff;
@@ -121,23 +122,16 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .cart-item {
-    grid-template-columns: 3fr 1fr 1fr 1fr 50px;
-    gap: 15px;
-    align-items: center;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
 .cart-item-product {
   display: flex;
-  margin-bottom: 15px;
-}
-
-@media (min-width: 768px) {
-  .cart-item-product {
-    margin-bottom: 0;
-  }
+  align-items: center;
 }
 
 .cart-item-image {
@@ -152,6 +146,10 @@
   height: 100%;
   object-fit: cover;
   border-radius: 4px;
+}
+
+.cart-item-details {
+  flex: 1;
 }
 
 .cart-item-name {
@@ -180,6 +178,7 @@
   .cart-item-subtotal {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 8px 0;
     border-bottom: 1px solid #e9ecef;
   }
@@ -348,4 +347,77 @@
 
 .continue-link:hover {
   text-decoration: underline;
+}
+
+/* 注文内容表示 */
+.order-content {
+  margin-top: 40px;
+}
+
+.order-content h2 {
+  margin-bottom: 20px;
+}
+
+.order-item {
+  border-bottom: 1px solid #e9ecef;
+  padding: 15px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item-details {
+  display: flex;
+  align-items: center;
+}
+
+.order-item-image {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.order-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.order-item-info h3 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+}
+
+.order-item-price {
+  font-weight: 500;
+}
+
+/* 追加のモバイル対応 */
+@media (max-width: 576px) {
+  .cart-steps {
+    flex-wrap: wrap;
+  }
+  
+  .cart-step {
+    width: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .step-divider {
+    max-width: 30px;
+  }
+  
+  .cart-item-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .quantity-btn {
+    width: 36px;
+    height: 36px;
+  }
 }
