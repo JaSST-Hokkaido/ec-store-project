@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import PageTitle from '../utils/PageTitle';
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const CartPage: React.FC = () => {
   if (cartItems.length === 0) {
     return (
       <div className="cart-page">
+        <PageTitle title="ショッピングカート" description="カートに追加した商品を確認できます。" />
         <div className="container">
           <h1 className="page-title">ショッピングカート</h1>
           <div className="empty-cart">
@@ -50,6 +52,7 @@ const CartPage: React.FC = () => {
 
   return (
     <div className="cart-page">
+      <PageTitle title="ショッピングカート" description="カートに追加した商品を確認できます。" />
       <div className="container">
         <h1 className="page-title">ショッピングカート</h1>
         

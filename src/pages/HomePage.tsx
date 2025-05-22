@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PageTitle from '../utils/PageTitle';
 
 const HomePage: React.FC = () => {
   // 特集商品
@@ -69,6 +70,8 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="home-page">
+      <PageTitle title="ホーム" description="JaSST Hokkaidoストアへようこそ。テクノロジーの力で日常をもっと便利に、もっと楽しくする商品をご提供します。" />
+      
       {/* ヒーローセクション */}
       <section className="hero-section">
         <div className="container">

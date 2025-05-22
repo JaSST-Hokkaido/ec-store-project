@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import PageTitle from '../utils/PageTitle';
 
 // ダミーデータ（後でAPI連携に置き換え）
 const products = [
@@ -189,6 +190,7 @@ const ProductListPage: React.FC = () => {
 
   return (
     <div className="product-list-page">
+      <PageTitle title="商品一覧" description="JaSST Hokkaidoストアの商品をご覧いただけます。" />
       <div className="container">
         <h1 className="page-title">商品一覧</h1>
 

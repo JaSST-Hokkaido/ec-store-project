@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import PageTitle from '../utils/PageTitle';
 
 // ダミーデータ（後でAPI連携に置き換え）
 const products = [
@@ -158,6 +159,7 @@ const ProductDetailPage: React.FC = () => {
   if (!product) {
     return (
       <div className="container">
+        <PageTitle title="商品が見つかりません" />
         <div className="product-not-found">
           <h2>商品が見つかりませんでした</h2>
           <p>指定された商品IDの商品は存在しないか、削除された可能性があります。</p>
@@ -171,6 +173,10 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="product-detail-page">
+      <PageTitle 
+        title={product.name} 
+        description={product.description}
+      />
       <div className="container">
         <div className="product-detail-container">
           <div className="product-image-container">
