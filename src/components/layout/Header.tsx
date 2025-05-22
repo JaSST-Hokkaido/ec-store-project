@@ -28,7 +28,7 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="container header-container">
         <div className="logo">
-          <Link to="/">テクノラボストア</Link>
+          <Link to="/">JaSST Hokkaidoストア</Link>
         </div>
 
         {/* PCナビゲーション */}

@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
       <div className="container">
         <div className="footer-container">
           <div className="footer-column">
-            <h3>テクノラボストア</h3>
+            <h3>JaSST Hokkaidoストア</h3>
             <ul className="footer-links">
               <li className="footer-link">
                 <Link to="/about">当店について</Link>
@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {currentYear} テクノラボストア All Rights Reserved.</p>
+          <p>&copy; {currentYear} JaSST Hokkaidoストア All Rights Reserved.</p>
         </div>
       </div>
     </footer>

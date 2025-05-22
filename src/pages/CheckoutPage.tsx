@@ -94,7 +94,7 @@ const CheckoutPage: React.FC = () => {
         },
         {
           id: 3,
-          name: 'テクノラボ ステッカーセット',
+          name: 'JaSST Hokkaido ステッカーセット',
           price: 980,
           quantity: 1
         }

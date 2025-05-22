@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
   const newProducts = [
     {
       id: 3,
-      name: 'テクノラボ ステッカーセット',
+      name: 'JaSST Hokkaido ステッカーセット',
       price: 980,
       imageUrl: 'https://placehold.jp/300x200.png',
       category: 'ステーショナリー'
@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
     },
     {
       id: 7,
-      name: 'テクノラボ ロゴキャップ',
+      name: 'JaSST Hokkaido ロゴキャップ',
       price: 3200,
       imageUrl: 'https://placehold.jp/300x200.png',
       category: 'アパレル'
@@ -74,11 +74,11 @@ const HomePage: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <h1>テクノロジーを<br />身近に感じるライフスタイル</h1>
-            <p>テクノラボストアは、テクノロジーの力で日常をもっと便利に、もっと楽しくする商品を提供します。</p>
+            <p>JaSST Hokkaidoストアは、テクノロジーの力で日常をもっと便利に、もっと楽しくする商品を提供します。</p>
             <Link to="/products" className="btn btn-primary">商品を見る</Link>
           </div>
           <div className="hero-image">
-            <img src="https://placehold.jp/600x400.png" alt="テクノラボストア" />
+            <img src="https://placehold.jp/600x400.png" alt="JaSST Hokkaidoストア" />
           </div>
         </div>
       </section>

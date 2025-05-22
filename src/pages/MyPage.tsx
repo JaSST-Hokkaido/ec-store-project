@@ -13,7 +13,7 @@ const ProfilePage: React.FC = () => {
       prefecture: '東京都',
       city: '渋谷区',
       address1: '〇〇町1-2-3',
-      address2: 'テクノアパート101'
+      address2: 'JaSST Hokkaidoアパート101'
     },
     birthdate: '1985-01-15'
   });
@@ -75,7 +75,7 @@ const OrderHistoryPage: React.FC = () => {
       status: '発送済み',
       items: [
         { id: 1, name: 'テクノベーシック Tシャツ', quantity: 2, price: 3500 },
-        { id: 3, name: 'テクノラボ ステッカーセット', quantity: 1, price: 980 },
+        { id: 3, name: 'JaSST Hokkaido ステッカーセット', quantity: 1, price: 980 },
       ]
     },
     {

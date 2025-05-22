@@ -27,11 +27,11 @@ const products = [
   },
   {
     id: 3,
-    name: 'テクノラボ ステッカーセット',
+    name: 'JaSST Hokkaido ステッカーセット',
     price: 980,
     imageUrl: 'https://placehold.jp/300x200.png',
     category: 'ステーショナリー',
-    description: '耐水性のあるテクノラボロゴステッカー10枚セット。PCやスマホなどに貼れます。',
+    description: '耐水性のあるJaSST Hokkaidoロゴステッカー10枚セット。PCやスマホなどに貼れます。',
     details: 'サイズ: 直径3cm～8cm（種類により異なる）\n素材: 耐水性ビニール\n枚数: 10枚',
     inStock: true,
     stock: 100
@@ -71,7 +71,7 @@ const products = [
   },
   {
     id: 7,
-    name: 'テクノラボ ロゴキャップ',
+    name: 'JaSST Hokkaido ロゴキャップ',
     price: 3200,
     imageUrl: 'https://placehold.jp/300x200.png',
     category: 'アパレル',
@@ -87,7 +87,7 @@ const products = [
     imageUrl: 'https://placehold.jp/300x200.png',
     category: '書籍',
     description: '最新のプログラミング技術を網羅した参考書。初心者から上級者まで対応。',
-    details: 'ページ数: 350ページ\n出版: テクノラボ出版\n発売日: 2023年1月\n対象: 初級～上級',
+    details: 'ページ数: 350ページ\n出版: JaSST Hokkaido出版\n発売日: 2023年1月\n対象: 初級～上級',
     inStock: true,
     stock: 28
   },

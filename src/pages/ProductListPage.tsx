@@ -23,11 +23,11 @@ const products = [
   },
   {
     id: 3,
-    name: 'テクノラボ ステッカーセット',
+    name: 'JaSST Hokkaido ステッカーセット',
     price: 980,
     imageUrl: 'https://placehold.jp/300x200.png',
     category: 'ステーショナリー',
-    description: '耐水性のあるテクノラボロゴステッカー10枚セット。PCやスマホなどに貼れます。',
+    description: '耐水性のあるJaSST Hokkaidoロゴステッカー10枚セット。PCやスマホなどに貼れます。',
     inStock: true
   },
   {
@@ -59,7 +59,7 @@ const products = [
   },
   {
     id: 7,
-    name: 'テクノラボ ロゴキャップ',
+    name: 'JaSST Hokkaido ロゴキャップ',
     price: 3200,
     imageUrl: 'https://placehold.jp/300x200.png',
     category: 'アパレル',
