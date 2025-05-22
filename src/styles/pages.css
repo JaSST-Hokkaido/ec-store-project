@@ -1,0 +1,626 @@
+/* 共通ページスタイル */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* 404エラーページ */
+.not-found-page {
+  padding: 60px 0;
+  text-align: center;
+}
+
+.not-found-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.error-code {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.not-found-page h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.not-found-page p {
+  margin-bottom: 30px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.not-found-suggestions {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e9ecef;
+}
+
+.not-found-suggestions h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.not-found-suggestions ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.not-found-suggestions li a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.not-found-suggestions li a:hover {
+  text-decoration: underline;
+}
+
+/* カートページ */
+.cart-page {
+  padding: 40px 0;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-empty h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.cart-empty p {
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.cart-empty-icon {
+  font-size: 4rem;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+.cart-items {
+  margin-bottom: 30px;
+}
+
+.cart-item {
+  display: flex;
+  padding: 20px;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item-image {
+  flex: 0 0 120px;
+  margin-right: 20px;
+}
+
+.cart-item-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-name {
+  margin: 0 0 10px;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.cart-item-options {
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.cart-item-price {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  max-width: 120px;
+}
+
+.quantity-button {
+  width: 32px;
+  height: 32px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.quantity-input {
+  width: 40px;
+  height: 32px;
+  margin: 0 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.cart-item-actions {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cart-item-subtotal {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.remove-button:hover {
+  text-decoration: underline;
+}
+
+.cart-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.summary-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 1.3rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+}
+
+.cart-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.continue-shopping {
+  color: #007bff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.continue-shopping:hover {
+  text-decoration: underline;
+}
+
+.continue-icon {
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+  }
+  
+  .cart-item-image {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  
+  .cart-item-actions {
+    margin-left: 0;
+    margin-top: 15px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .cart-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .cart-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ページネーション共通スタイル */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination-item {
+  margin: 0 5px;
+}
+
+.pagination-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  color: #333;
+  background-color: #f8f9fa;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.pagination-link:hover {
+  background-color: #e9ecef;
+}
+
+.pagination-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination-link.disabled {
+  color: #adb5bd;
+  pointer-events: none;
+}
+
+/* 共通カード要素 */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 75%; /* 4:3のアスペクト比 */
+}
+
+.card-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.card-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.card-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.price-current {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.card-actions {
+  margin-top: 15px;
+}
+
+/* モーダル共通スタイル */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* フォーム共通スタイル */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.required {
+  color: #dc3545;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ボタン共通スタイル */
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn.secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn.secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn.danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn.danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn.success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn.success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn.small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.btn.large {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+}
+
+.auth-success, 
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.auth-error, 
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
