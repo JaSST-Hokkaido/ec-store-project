@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAdminAuth } from '../context/AdminAuthContext';
 
 const ProfileEditPage: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser, updateUserProfile } = useAuth();
+  const { login: adminLogin } = useAdminAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [showDevTools, setShowDevTools] = useState(false);
+  const [adminCode, setAdminCode] = useState('');
+  const [adminCodeError, setAdminCodeError] = useState('');
+  const [adminSuccess, setAdminSuccess] = useState('');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -125,6 +131,41 @@ const ProfileEditPage: React.FC = () => {
       setError(err.message || '会員情報の更新に失敗しました。もう一度お試しください。');
     } finally {
       setIsLoading(false);
+    }
+  };
+  // 開発者ツール表示の切り替え
+  const toggleDevTools = () => {
+    setShowDevTools(!showDevTools);
+    setAdminCode('');
+    setAdminCodeError('');
+    setAdminSuccess('');
+  };
+  
+  // 管理者権限付与処理
+  const handleAdminPromotion = () => {
+    if (!adminCode) {
+      setAdminCodeError('コードを入力してください');
+      return;
+    }
+    
+    // 特定のコードでシステム管理者権限を付与（開発環境でのみ機能）
+    if (adminCode === 'DEV-ADMIN-1234') {
+      try {
+        // 管理者権限でログイン
+        adminLogin(currentUser?.email || '', 'admin-password');  // 実際の実装では適切な認証方法を使用
+        
+        setAdminSuccess('システム管理者権限が付与されました。管理画面にアクセスできます。');
+        setAdminCodeError('');
+        
+        // 3秒後に管理画面へリダイレクト
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 3000);
+      } catch (err) {
+        setAdminCodeError('権限付与に失敗しました');
+      }
+    } else {
+      setAdminCodeError('認証コードが正しくありません');
     }
   };
   
@@ -263,6 +304,63 @@ const ProfileEditPage: React.FC = () => {
             </button>
           </div>
         </form>
+        
+        {/* 開発モード切り替えボタン - 本番環境では削除されるコンポーネント */}
+        <div className="dev-tools-toggle">
+          <button 
+            type="button" 
+            className="btn text-only"
+            onClick={toggleDevTools}
+          >
+            {showDevTools ? '開発者モードを隠す' : '開発者モードを表示'}
+          </button>
+        </div>
+        
+        {/* 開発者ツール - 暫定的な管理者権限付与機能 */}
+        {showDevTools && (
+          <div className="dev-tools-panel">
+            <div className="dev-tools-warning">
+              <h3>⚠️ 開発者モード（暫定機能）</h3>
+              <p>この機能は開発環境でのテスト用です。本番環境では削除されます。</p>
+            </div>
+            
+            <div className="admin-promotion-section">
+              <h4>システム管理者権限付与（開発テスト用）</h4>
+              
+              {adminSuccess && (
+                <div className="admin-success-message">
+                  {adminSuccess}
+                </div>
+              )}
+              
+              {adminCodeError && (
+                <div className="admin-error-message">
+                  {adminCodeError}
+                </div>
+              )}
+              
+              <div className="admin-code-input">
+                <input
+                  type="text"
+                  placeholder="開発用認証コード"
+                  value={adminCode}
+                  onChange={(e) => setAdminCode(e.target.value)}
+                />
+                <button 
+                  type="button" 
+                  className="btn danger"
+                  onClick={handleAdminPromotion}
+                >
+                  管理者権限付与
+                </button>
+              </div>
+              
+              <div className="admin-code-hint">
+                <small>ヒント: 開発用認証コードは 'DEV-ADMIN-1234' です</small>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
