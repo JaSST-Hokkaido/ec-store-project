@@ -5,6 +5,8 @@ import './styles/index.css';
 import './styles/mypage.css';
 import './styles/admin.css';
 import './styles/checkout.css';
+import './styles/cart.css';
+import './styles/product.css';
 import './styles/pages.css';
 import './styles/App.css';
 import './styles/auth.css';
