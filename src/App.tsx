@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import './styles/App.css';
 
 // コンポーネント
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import AdminLayout from './components/admin/AdminLayout';
 
 // ページ
 import HomePage from './pages/HomePage';
@@ -18,9 +18,13 @@ import MyPage from './pages/MyPage';
 import OrderCompletePage from './pages/OrderCompletePage';
 import NotFoundPage from './pages/NotFoundPage';
 
+// 管理者ページ
+import AdminLoginPage from './pages/admin/AdminLoginPage';
+
 // コンテキスト
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import { AdminAuthProvider } from './context/AdminAuthContext';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,9 +45,22 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <div className="app">
-          <Header />
-          <main className="main-content">
+        <AdminAuthProvider>
+          <div className="app">
+            <Routes>
+              {/* 管理者画面のルート */}
+              <Route path="/admin/*" element={
+                <Routes>
+                  <Route path="login" element={<AdminLoginPage />} />
+                  <Route path="*" element={<AdminLayout />} />
+                </Routes>
+              } />
+              
+              {/* 通常の顧客向け画面のルート */}
+              <Route path="/*" element={
+                <>
+                  <Header />
+                  <main className="main-content">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/products" element={<ProductListPage />} />
@@ -64,9 +81,13 @@ function App() {
               <Route path="/order-complete" element={<OrderCompletePage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
-          </main>
-          <Footer />
-        </div>
+                  </main>
+                  <Footer />
+                </>
+              } />
+            </Routes>
+          </div>
+        </AdminAuthProvider>
       </CartProvider>
     </AuthProvider>
   );
