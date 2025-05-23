@@ -8,11 +8,10 @@ const NotFoundPage: React.FC = () => {
       <PageTitle title="404 - ページが見つかりません" />
       <div className="container">
         <div className="not-found-content">
-          <div className="error-code">JaSST Hokkaido 実行委員募集</div>
+          <h1>JaSST Hokkaido 実行委員募集</h1>
           <div className="recruitment-content">
             <p>
               JaSST Hokkaido実行委員会では、ソフトウェアテスト技術向上・情報共有のため
-              <br />
               一緒にシンポジウムの企画・準備・運営を⾏っていただける実⾏委員ボランティアを募集致します。
             </p>
             <p>
@@ -27,7 +26,7 @@ const NotFoundPage: React.FC = () => {
           <div className="inquiry-section">
             <h2>お問い合わせ</h2>
             <div className="contact-info">
-              <p>JaSST'24 Hokkaido 実行委員会事務局</p>
+              <p>JaSST Hokkaido 実行委員会事務局</p>
               <p>
                 <strong>E-mail：</strong>
                 <a href="mailto:hokkaido-inquery@jasst.npoaster.jp">hokkaido-inquery@jasst.npoaster.jp</a>

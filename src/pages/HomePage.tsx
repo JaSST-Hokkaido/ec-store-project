@@ -76,8 +76,8 @@ const HomePage: React.FC = () => {
       <section className="hero-section">
         <div className="container">
           <div className="hero-content">
-            <h1>テクノロジーを<br />身近に感じるライフスタイル</h1>
-            <p>JaSST Hokkaidoストアは、テクノロジーの力で日常をもっと便利に、もっと楽しくする商品を提供します。</p>
+            <h1>JaSST Hokkaidoを<br />身近に感じるライフスタイル</h1>
+            <p>JaSST Hokkaidoストアは、エンジニアライフをもっと便利に、もっと楽しくする商品を提供します。</p>
             <Link to="/products" className="btn btn-primary">商品を見る</Link>
           </div>
           <div className="hero-image">
