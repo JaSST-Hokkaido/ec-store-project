@@ -175,36 +175,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     sessionStorage.removeItem(CURRENT_USER_KEY);
   };
 
-  // パスワードリセット
-  const resetPassword = async (email: string): Promise<{ success: boolean; message?: string }> => {
+  // パスワードリセット（その場でリセット）
+  const resetPassword = async (email: string): Promise<{ success: boolean; message?: string; newPassword?: string }> => {
     const users = getUsers();
-    const user = users.find(u => u.email === email);
+    const userIndex = users.findIndex(u => u.email === email);
     
-    if (!user) {
+    if (userIndex === -1) {
       return { success: false, message: '登録されていないメールアドレスです' };
     }
 
-    // リセットトークンの生成
-    const token = Math.random().toString(36).substring(2, 15);
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1); // 1時間有効
-
-    // トークンの保存
-    const resetTokens = getResetTokens();
+    // 新しいパスワードを生成（8文字のランダム文字列）
+    const newPassword = Math.random().toString(36).substring(2, 10);
     
-    // 既存のトークンを削除
-    const filteredTokens = resetTokens.filter(t => t.email !== email);
+    // ユーザー情報を更新
+    const updatedUser = { ...users[userIndex] };
+    (updatedUser as any).password = newPassword;
     
-    // 新しいトークンを追加
-    saveResetTokens([
-      ...filteredTokens,
-      { email, token, expiresAt: expiresAt.toISOString() }
-    ]);
+    // ユーザーリストを更新
+    users[userIndex] = updatedUser;
+    saveUsers(users);
 
-    // 実際のアプリではここでメール送信の処理
-    console.log(`リセットリンク: /reset-password?token=${token}&email=${encodeURIComponent(email)}`);
-
-    return { success: true, message: 'パスワードリセットのリンクをメールで送信しました' };
+    return { 
+      success: true, 
+      message: 'パスワードをリセットしました', 
+      newPassword: newPassword 
+    };
   };
 
   // ユーザープロフィールの更新

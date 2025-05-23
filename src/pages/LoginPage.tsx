@@ -61,7 +61,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ resetMode = false }) => {
     }
   };
   
-  // パスワードリセットフォーム送信処理
+  // パスワードリセット処理（その場でリセット）
+  const [newPassword, setNewPassword] = useState<string | null>(null);
+  
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -73,14 +75,20 @@ const LoginPage: React.FC<LoginPageProps> = ({ resetMode = false }) => {
     setIsLoading(true);
     setError('');
     setSuccessMessage('');
+    setNewPassword(null);
     
     try {
-      const result = await resetPassword(email);
+      const result = await resetPassword(email) as { 
+        success: boolean; 
+        message?: string; 
+        newPassword?: string 
+      };
       
       if (result.success) {
-        setSuccessMessage(result.message || 'パスワードリセットのリンクをメールで送信しました');
-        // デモ用にコンソールにリンクを出力
-        console.log(`パスワードリセットのリンクを ${email} に送信しました`);
+        setSuccessMessage(result.message || 'パスワードをリセットしました');
+        if (result.newPassword) {
+          setNewPassword(result.newPassword);
+        }
       } else {
         setError(result.message || 'パスワードリセットに失敗しました');
       }
@@ -115,27 +123,48 @@ const LoginPage: React.FC<LoginPageProps> = ({ resetMode = false }) => {
               </div>
             )}
             
-            <form className="auth-form" onSubmit={handleResetSubmit}>
-              <div className="form-group">
-                <label htmlFor="email">メールアドレス</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                />
+            {newPassword ? (
+              <div className="password-reset-result">
+                <div className="new-password-container">
+                  <h3>新しいパスワード:</h3>
+                  <div className="new-password-display">
+                    {newPassword}
+                  </div>
+                  <p className="password-note">
+                    このパスワードをコピーして保存してください。<br />
+                    ログイン後、マイページからパスワードを変更できます。
+                  </p>
+                </div>
+                <button 
+                  className="btn auth-btn" 
+                  onClick={() => navigate('/login')}
+                >
+                  ログインページへ
+                </button>
               </div>
-              
-              <button 
-                type="submit" 
-                className="btn auth-btn" 
-                disabled={isLoading}
-              >
-                {isLoading ? '送信中...' : 'リセットリンクを送信'}
-              </button>
-            </form>
+            ) : (
+              <form className="auth-form" onSubmit={handleResetSubmit}>
+                <div className="form-group">
+                  <label htmlFor="email">メールアドレス</label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+                
+                <button 
+                  type="submit" 
+                  className="btn auth-btn" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'リセット中...' : 'パスワードをリセット'}
+                </button>
+              </form>
+            )}
             
             <div className="auth-footer">
               <p>

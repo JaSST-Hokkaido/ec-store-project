@@ -239,6 +239,46 @@
   margin-bottom: var(--spacing-md);
 }
 
+/* パスワードリセット結果 */
+.password-reset-result {
+  margin: var(--spacing-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.new-password-container {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.new-password-container h3 {
+  color: var(--color-dark);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+}
+
+.new-password-display {
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: var(--spacing-sm) 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--color-primary);
+  display: inline-block;
+}
+
+.password-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  margin-top: var(--spacing-sm);
+}
+
 /* 住所フィールド */
 .address-toggle {
   margin-bottom: var(--spacing-md);
