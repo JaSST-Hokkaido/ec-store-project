@@ -48,7 +48,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ resetMode = false }) => {
       
       if (result.success) {
         // ログイン成功
-        navigate(redirectTo === 'checkout' ? '/checkout' : `/${redirectTo}`);
+        if (redirectTo === 'checkout') {
+          navigate('/checkout');
+        } else if (redirectTo === '/' || redirectTo === '') {
+          navigate('/');
+        } else {
+          navigate(`/${redirectTo}`);
+        }
       } else {
         // ログイン失敗
         setError(result.message || 'ログインに失敗しました');
