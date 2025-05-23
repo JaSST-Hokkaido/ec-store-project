@@ -90,6 +90,57 @@
   text-decoration: underline;
 }
 
+/* JaSST 募集ページスタイル */
+.recruitment-content {
+  text-align: left;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.recruitment-content p {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.inquiry-section {
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.inquiry-section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #333;
+  border-left: 4px solid #dc3545;
+  padding-left: 10px;
+}
+
+.contact-info {
+  line-height: 1.6;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+}
+
+.contact-info a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+.contact-note {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
 /* カートページ */
 .cart-page {
   padding: 40px 0;
