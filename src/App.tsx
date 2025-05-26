@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { initializeDemoEnvironment } from './utils/initializeDemo';
 
 // コンポーネント
 import Header from './components/layout/Header';
@@ -30,12 +31,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 初期設定やデータ読み込みがある場合はここで実行
-    const timer = setTimeout(() => {
+    // デモ環境を初期化
+    const initializeApp = async () => {
+      await initializeDemoEnvironment();
       setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    };
+    
+    initializeApp();
   }, []);
 
   if (isLoading) {

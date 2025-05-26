@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "アパレル",
+    "slug": "apparel",
+    "description": "Tシャツ、ポロシャツ、キャップなどのウェア商品",
+    "icon": "👕",
+    "featured": true,
+    "order": 1
+  },
+  {
+    "id": 2,
+    "name": "生活雑貨",
+    "slug": "household",
+    "description": "マグカップ、ボトルなどの日用品",
+    "icon": "🏠",
+    "featured": true,
+    "order": 2
+  },
+  {
+    "id": 3,
+    "name": "ステーショナリー",
+    "slug": "stationery",
+    "description": "ノート、ステッカーなどの文房具",
+    "icon": "📝",
+    "featured": true,
+    "order": 3
+  },
+  {
+    "id": 4,
+    "name": "書籍",
+    "slug": "books",
+    "description": "技術書、参考書など",
+    "icon": "📚",
+    "featured": true,
+    "order": 4
+  }
+]

@@ -1,123 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import PageTitle from '../utils/PageTitle';
-
-// ダミーデータ（後でAPI連携に置き換え）
-const products = [
-  {
-    id: 1,
-    name: 'テクノベーシック Tシャツ',
-    price: 3500,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: '柔らかな肌触りの綿100%Tシャツ。テクノロジーをモチーフにしたシンプルなデザイン。',
-    details: '素材: 綿100%\nサイズ: S, M, L, XL\nカラー: ホワイト, ブラック, ネイビー',
-    inStock: true,
-    stock: 50
-  },
-  {
-    id: 2,
-    name: 'プログラマー マグカップ',
-    price: 1800,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '生活雑貨',
-    description: '大容量のマグカップ。プログラマーのための至高の一品。電子レンジ対応。',
-    details: '素材: セラミック\n容量: 350ml\n電子レンジ: 対応\n食洗機: 対応',
-    inStock: true,
-    stock: 30
-  },
-  {
-    id: 3,
-    name: 'JaSST Hokkaido ステッカーセット',
-    price: 980,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'ステーショナリー',
-    description: '耐水性のあるJaSST Hokkaidoロゴステッカー10枚セット。PCやスマホなどに貼れます。',
-    details: 'サイズ: 直径3cm～8cm（種類により異なる）\n素材: 耐水性ビニール\n枚数: 10枚',
-    inStock: true,
-    stock: 100
-  },
-  {
-    id: 4,
-    name: 'コーディング ノート',
-    price: 1200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'ステーショナリー',
-    description: 'プログラミングに最適な方眼罫のノート。コードスニペットの記録に便利。',
-    details: 'サイズ: B5\nページ数: 80ページ\n罫線: 5mm方眼\n素材: 再生紙',
-    inStock: true,
-    stock: 45
-  },
-  {
-    id: 5,
-    name: 'デベロッパー ポロシャツ',
-    price: 4200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: '通気性の良いポロシャツ。仕事でもカジュアルな場でも使える一枚。',
-    details: '素材: 綿60%, ポリエステル40%\nサイズ: S, M, L, XL\nカラー: グレー, ネイビー',
-    inStock: true,
-    stock: 20
-  },
-  {
-    id: 6,
-    name: 'エンジニア 保温ボトル',
-    price: 2500,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '生活雑貨',
-    description: '12時間保温、24時間保冷可能なステンレスボトル。プログラミング中の水分補給に。',
-    details: '素材: ステンレス（内側）, アルミニウム（外側）\n容量: 500ml\n保温効力: 12時間\n保冷効力: 24時間',
-    inStock: false,
-    stock: 0
-  },
-  {
-    id: 7,
-    name: 'JaSST Hokkaido ロゴキャップ',
-    price: 3200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: 'シンプルなロゴ入りキャップ。サイズ調整可能でどなたでも着用できます。',
-    details: '素材: 綿100%\nサイズ: フリー（後部アジャスター付き）\nカラー: ブラック, カーキ',
-    inStock: true,
-    stock: 15
-  },
-  {
-    id: 8,
-    name: 'プログラミング 参考書',
-    price: 3800,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '書籍',
-    description: '最新のプログラミング技術を網羅した参考書。初心者から上級者まで対応。',
-    details: 'ページ数: 350ページ\n出版: JaSST Hokkaido出版\n発売日: 2023年1月\n対象: 初級～上級',
-    inStock: true,
-    stock: 28
-  },
-];
+import { getProductById, checkProductStock, getRelatedProducts, Product } from '../services/productService';
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<any | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [stock, setStock] = useState(0);
+  const { addToCart } = useCart();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    // 実際のAPIの場合はここでデータをフェッチ
-    const productId = parseInt(id || '0');
-    const foundProduct = products.find(p => p.id === productId);
-    
-    if (foundProduct) {
-      setProduct(foundProduct);
-      
-      // 商品オプションがあれば初期値を設定
-      if (foundProduct.category === 'アパレル') {
-        setSelectedOptions({ size: 'M', color: 'ブラック' });
+    const loadProduct = async () => {
+      try {
+        const productId = parseInt(id || '0');
+        const foundProduct = await getProductById(productId);
+        
+        if (foundProduct) {
+          setProduct(foundProduct);
+          
+          // 在庫数を取得
+          const currentStock = checkProductStock(productId);
+          setStock(currentStock);
+          
+          // 商品オプションがあれば初期値を設定
+          if (foundProduct.category === 'アパレル') {
+            // オプションの初期値を設定
+            const defaultSize = foundProduct.options.sizes?.[0] || 'M';
+            const defaultColor = foundProduct.options.colors?.[0] || 'ブラック';
+            setSelectedOptions({ size: defaultSize, color: defaultColor });
+          }
+          
+          // 関連商品を取得
+          const related = await getRelatedProducts(productId);
+          setRelatedProducts(related);
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error('商品データの取得に失敗しました:', error);
+        setIsLoading(false);
       }
-    }
+    };
     
-    setIsLoading(false);
+    loadProduct();
   }, [id]);
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -131,25 +64,27 @@ const ProductDetailPage: React.FC = () => {
     });
   };
 
-  const { addToCart } = useCart();
-
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!product) return;
     
-    // カートに商品を追加
-    addToCart({
+    const success = await addToCart({
       id: product.id,
       name: product.name,
-      price: product.price,
+      price: currentUser ? product.memberPrice : product.price,
       imageUrl: product.imageUrl,
       quantity: quantity,
       options: product.category === 'アパレル' ? selectedOptions : undefined
     });
     
-    alert(`${product.name}を${quantity}個カートに追加しました。`);
-    
-    // カート画面に遷移するオプション
-    // navigate('/cart');
+    if (success) {
+      alert(`${product.name}を${quantity}個カートに追加しました。`);
+      
+      // 在庫を再チェック
+      const newStock = checkProductStock(product.id);
+      setStock(newStock);
+    } else {
+      alert('在庫が不足しています。');
+    }
   };
 
   if (isLoading) {
@@ -171,6 +106,9 @@ const ProductDetailPage: React.FC = () => {
     );
   }
 
+  const displayPrice = currentUser ? product.memberPrice : product.price;
+  const inStock = stock > 0;
+
   return (
     <div className="product-detail-page">
       <PageTitle 
@@ -181,6 +119,8 @@ const ProductDetailPage: React.FC = () => {
         <div className="product-detail-container">
           <div className="product-image-container">
             <img src={product.imageUrl} alt={product.name} className="product-image" />
+            {product.new && <div className="product-badge new">NEW</div>}
+            {product.featured && <div className="product-badge featured">注目</div>}
           </div>
           
           <div className="product-info">
@@ -192,7 +132,18 @@ const ProductDetailPage: React.FC = () => {
             
             <div className="product-category">{product.category}</div>
             <h1 className="product-title">{product.name}</h1>
-            <div className="product-price">¥{product.price.toLocaleString()}</div>
+            
+            <div className="product-price">
+              {currentUser && displayPrice < product.price && (
+                <>
+                  <span className="original-price">通常価格: ¥{product.price.toLocaleString()}</span>
+                  <br />
+                  <span className="member-price-label">会員価格: </span>
+                </>
+              )}
+              <span className="current-price">¥{displayPrice.toLocaleString()}</span>
+            </div>
+            
             <div className="product-description">{product.description}</div>
             
             <div className="product-details">
@@ -202,35 +153,39 @@ const ProductDetailPage: React.FC = () => {
             
             {product.category === 'アパレル' && (
               <div className="product-options">
-                <div className="option-group">
-                  <label>サイズ:</label>
-                  <div className="option-buttons">
-                    {['S', 'M', 'L', 'XL'].map(size => (
-                      <button
-                        key={size}
-                        className={`option-button ${selectedOptions.size === size ? 'selected' : ''}`}
-                        onClick={() => handleOptionChange('size', size)}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                {product.options.sizes && (
+                  <div className="option-group">
+                    <label>サイズ:</label>
+                    <div className="option-buttons">
+                      {product.options.sizes.map(size => (
+                        <button
+                          key={size}
+                          className={`option-button ${selectedOptions.size === size ? 'selected' : ''}`}
+                          onClick={() => handleOptionChange('size', size)}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="option-group">
-                  <label>カラー:</label>
-                  <div className="option-buttons">
-                    {['ブラック', 'ホワイト', 'ネイビー', 'グレー'].map(color => (
-                      <button
-                        key={color}
-                        className={`option-button ${selectedOptions.color === color ? 'selected' : ''}`}
-                        onClick={() => handleOptionChange('color', color)}
-                      >
-                        {color}
-                      </button>
-                    ))}
+                {product.options.colors && (
+                  <div className="option-group">
+                    <label>カラー:</label>
+                    <div className="option-buttons">
+                      {product.options.colors.map(color => (
+                        <button
+                          key={color}
+                          className={`option-button ${selectedOptions.color === color ? 'selected' : ''}`}
+                          onClick={() => handleOptionChange('color', color)}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
             
@@ -238,7 +193,7 @@ const ProductDetailPage: React.FC = () => {
               <div className="quantity-selector">
                 <label>数量:</label>
                 <select value={quantity} onChange={handleQuantityChange}>
-                  {[...Array(10)].map((_, i) => (
+                  {[...Array(Math.min(stock, 10))].map((_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
                     </option>
@@ -247,8 +202,11 @@ const ProductDetailPage: React.FC = () => {
               </div>
               
               <div className="stock-status">
-                {product.inStock ? (
-                  <span className="in-stock">在庫あり（残り{product.stock}点）</span>
+                {inStock ? (
+                  <>
+                    <span className="in-stock">在庫あり</span>
+                    {stock <= 5 && <span className="stock-warning">（残り{stock}点）</span>}
+                  </>
                 ) : (
                   <span className="out-of-stock">在庫切れ</span>
                 )}
@@ -256,40 +214,56 @@ const ProductDetailPage: React.FC = () => {
               
               <button 
                 className="btn add-to-cart-btn"
-                disabled={!product.inStock}
+                disabled={!inStock}
                 onClick={handleAddToCart}
               >
                 カートに追加
               </button>
             </div>
+            
+            <div className="product-tags">
+              {product.tags.map(tag => (
+                <span key={tag} className="product-tag">{tag}</span>
+              ))}
+            </div>
           </div>
         </div>
         
-        <div className="related-products">
-          <h2>関連商品</h2>
-          <div className="product-grid small">
-            {products
-              .filter(p => p.category === product.category && p.id !== product.id)
-              .slice(0, 4)
-              .map(relatedProduct => (
-                <div className="card product-card" key={relatedProduct.id}>
-                  <div className="card-image">
-                    <img src={relatedProduct.imageUrl} alt={relatedProduct.name} />
+        {relatedProducts.length > 0 && (
+          <div className="related-products">
+            <h2>関連商品</h2>
+            <div className="product-grid small">
+              {relatedProducts.slice(0, 4).map(relatedProduct => {
+                const relatedStock = checkProductStock(relatedProduct.id);
+                const relatedPrice = currentUser ? relatedProduct.memberPrice : relatedProduct.price;
+                
+                return (
+                  <div className="card product-card" key={relatedProduct.id}>
+                    <div className="card-image">
+                      <img src={relatedProduct.imageUrl} alt={relatedProduct.name} />
+                      {relatedStock === 0 && <div className="out-of-stock">売切れ</div>}
+                    </div>
+                    <div className="card-body">
+                      <h3 className="card-title">{relatedProduct.name}</h3>
+                      <div className="card-price">
+                        {currentUser && relatedPrice < relatedProduct.price && (
+                          <span className="member-discount">会員価格 </span>
+                        )}
+                        ¥{relatedPrice.toLocaleString()}
+                      </div>
+                      <button 
+                        onClick={() => navigate(`/products/${relatedProduct.id}`)} 
+                        className="btn small"
+                      >
+                        詳細を見る
+                      </button>
+                    </div>
                   </div>
-                  <div className="card-body">
-                    <h3 className="card-title">{relatedProduct.name}</h3>
-                    <div className="card-price">¥{relatedProduct.price.toLocaleString()}</div>
-                    <button 
-                      onClick={() => navigate(`/products/${relatedProduct.id}`)} 
-                      className="btn small"
-                    >
-                      詳細を見る
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

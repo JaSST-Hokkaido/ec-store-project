@@ -1,72 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageTitle from '../utils/PageTitle';
+import { getFeaturedProducts, getNewProducts, getCategories, checkProductStock, Product, Category } from '../services/productService';
+import { useAuth } from '../context/AuthContext';
 
 const HomePage: React.FC = () => {
-  // 特集商品
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'テクノベーシック Tシャツ',
-      price: 3500,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: 'アパレル'
-    },
-    {
-      id: 5,
-      name: 'デベロッパー ポロシャツ',
-      price: 4200,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: 'アパレル'
-    },
-    {
-      id: 2,
-      name: 'プログラマー マグカップ',
-      price: 1800,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: '生活雑貨'
-    },
-    {
-      id: 8,
-      name: 'プログラミング 参考書',
-      price: 3800,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: '書籍'
-    }
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { currentUser } = useAuth();
 
-  // 新着商品
-  const newProducts = [
-    {
-      id: 3,
-      name: 'JaSST Hokkaido ステッカーセット',
-      price: 980,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: 'ステーショナリー'
-    },
-    {
-      id: 4,
-      name: 'コーディング ノート',
-      price: 1200,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: 'ステーショナリー'
-    },
-    {
-      id: 7,
-      name: 'JaSST Hokkaido ロゴキャップ',
-      price: 3200,
-      imageUrl: 'https://placehold.jp/300x200.png',
-      category: 'アパレル'
-    }
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [featured, newProds, cats] = await Promise.all([
+          getFeaturedProducts(),
+          getNewProducts(),
+          getCategories()
+        ]);
+        
+        // 最大4つずつ表示
+        setFeaturedProducts(featured.slice(0, 4));
+        setNewProducts(newProds.slice(0, 3));
+        setCategories(cats);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('データの取得に失敗しました:', error);
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
+  }, []);
 
-  // カテゴリー
-  const categories = [
-    { id: 1, name: 'アパレル', icon: '👕', path: '/products?category=アパレル' },
-    { id: 2, name: '生活雑貨', icon: '🏠', path: '/products?category=生活雑貨' },
-    { id: 3, name: 'ステーショナリー', icon: '📝', path: '/products?category=ステーショナリー' },
-    { id: 4, name: '書籍', icon: '📚', path: '/products?category=書籍' }
-  ];
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>読み込み中...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="home-page">
@@ -92,7 +66,7 @@ const HomePage: React.FC = () => {
           <h2 className="section-title">カテゴリーから探す</h2>
           <div className="category-grid">
             {categories.map(category => (
-              <Link to={category.path} className="category-card" key={category.id}>
+              <Link to={`/products?category=${category.name}`} className="category-card" key={category.id}>
                 <div className="category-icon">{category.icon}</div>
                 <h3>{category.name}</h3>
               </Link>
@@ -106,21 +80,36 @@ const HomePage: React.FC = () => {
         <div className="container">
           <h2 className="section-title">特集商品</h2>
           <div className="product-grid">
-            {featuredProducts.map(product => (
-              <div className="card product-card" key={product.id}>
-                <div className="card-image">
-                  <img src={product.imageUrl} alt={product.name} />
+            {featuredProducts.map(product => {
+              const stock = checkProductStock(product.id);
+              const inStock = stock > 0;
+              const displayPrice = currentUser ? product.memberPrice : product.price;
+
+              return (
+                <div className="card product-card" key={product.id}>
+                  <div className="card-image">
+                    <img src={product.imageUrl} alt={product.name} />
+                    {!inStock && <div className="out-of-stock">売切れ</div>}
+                  </div>
+                  <div className="card-body">
+                    <div className="product-category">{product.category}</div>
+                    <h3 className="card-title">{product.name}</h3>
+                    <div className="card-price">
+                      {currentUser && displayPrice < product.price && (
+                        <>
+                          <span className="original-price">¥{product.price.toLocaleString()}</span>
+                          <span className="member-price">会員価格: </span>
+                        </>
+                      )}
+                      ¥{displayPrice.toLocaleString()}
+                    </div>
+                    <Link to={`/products/${product.id}`} className="btn">
+                      詳細を見る
+                    </Link>
+                  </div>
                 </div>
-                <div className="card-body">
-                  <div className="product-category">{product.category}</div>
-                  <h3 className="card-title">{product.name}</h3>
-                  <div className="card-price">¥{product.price.toLocaleString()}</div>
-                  <Link to={`/products/${product.id}`} className="btn">
-                    詳細を見る
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -143,22 +132,37 @@ const HomePage: React.FC = () => {
         <div className="container">
           <h2 className="section-title">新着商品</h2>
           <div className="product-grid">
-            {newProducts.map(product => (
-              <div className="card product-card" key={product.id}>
-                <div className="card-image">
-                  <img src={product.imageUrl} alt={product.name} />
-                  <div className="new-badge">NEW</div>
+            {newProducts.map(product => {
+              const stock = checkProductStock(product.id);
+              const inStock = stock > 0;
+              const displayPrice = currentUser ? product.memberPrice : product.price;
+
+              return (
+                <div className="card product-card" key={product.id}>
+                  <div className="card-image">
+                    <img src={product.imageUrl} alt={product.name} />
+                    <div className="new-badge">NEW</div>
+                    {!inStock && <div className="out-of-stock">売切れ</div>}
+                  </div>
+                  <div className="card-body">
+                    <div className="product-category">{product.category}</div>
+                    <h3 className="card-title">{product.name}</h3>
+                    <div className="card-price">
+                      {currentUser && displayPrice < product.price && (
+                        <>
+                          <span className="original-price">¥{product.price.toLocaleString()}</span>
+                          <span className="member-price">会員価格: </span>
+                        </>
+                      )}
+                      ¥{displayPrice.toLocaleString()}
+                    </div>
+                    <Link to={`/products/${product.id}`} className="btn">
+                      詳細を見る
+                    </Link>
+                  </div>
                 </div>
-                <div className="card-body">
-                  <div className="product-category">{product.category}</div>
-                  <h3 className="card-title">{product.name}</h3>
-                  <div className="card-price">¥{product.price.toLocaleString()}</div>
-                  <Link to={`/products/${product.id}`} className="btn">
-                    詳細を見る
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="view-all-container">
             <Link to="/products" className="view-all-link">

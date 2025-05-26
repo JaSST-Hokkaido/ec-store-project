@@ -1,98 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import PageTitle from '../utils/PageTitle';
-
-// ダミーデータ（後でAPI連携に置き換え）
-const products = [
-  {
-    id: 1,
-    name: 'テクノベーシック Tシャツ',
-    price: 3500,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: '柔らかな肌触りの綿100%Tシャツ。テクノロジーをモチーフにしたシンプルなデザイン。',
-    inStock: true
-  },
-  {
-    id: 2,
-    name: 'プログラマー マグカップ',
-    price: 1800,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '生活雑貨',
-    description: '大容量のマグカップ。プログラマーのための至高の一品。電子レンジ対応。',
-    inStock: true
-  },
-  {
-    id: 3,
-    name: 'JaSST Hokkaido ステッカーセット',
-    price: 980,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'ステーショナリー',
-    description: '耐水性のあるJaSST Hokkaidoロゴステッカー10枚セット。PCやスマホなどに貼れます。',
-    inStock: true
-  },
-  {
-    id: 4,
-    name: 'コーディング ノート',
-    price: 1200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'ステーショナリー',
-    description: 'プログラミングに最適な方眼罫のノート。コードスニペットの記録に便利。',
-    inStock: true
-  },
-  {
-    id: 5,
-    name: 'デベロッパー ポロシャツ',
-    price: 4200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: '通気性の良いポロシャツ。仕事でもカジュアルな場でも使える一枚。',
-    inStock: true
-  },
-  {
-    id: 6,
-    name: 'エンジニア 保温ボトル',
-    price: 2500,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '生活雑貨',
-    description: '12時間保温、24時間保冷可能なステンレスボトル。プログラミング中の水分補給に。',
-    inStock: false
-  },
-  {
-    id: 7,
-    name: 'JaSST Hokkaido ロゴキャップ',
-    price: 3200,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: 'アパレル',
-    description: 'シンプルなロゴ入りキャップ。サイズ調整可能でどなたでも着用できます。',
-    inStock: true
-  },
-  {
-    id: 8,
-    name: 'プログラミング 参考書',
-    price: 3800,
-    imageUrl: 'https://placehold.jp/300x200.png',
-    category: '書籍',
-    description: '最新のプログラミング技術を網羅した参考書。初心者から上級者まで対応。',
-    inStock: true
-  },
-];
-
-const categories = [
-  { id: 1, name: 'すべて' },
-  { id: 2, name: 'アパレル' },
-  { id: 3, name: '生活雑貨' },
-  { id: 4, name: 'ステーショナリー' },
-  { id: 5, name: '書籍' },
-];
+import { getProducts, getCategories, checkProductStock, Product, Category } from '../services/productService';
+import { useAuth } from '../context/AuthContext';
 
 const ProductListPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('すべて');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const { currentUser } = useAuth();
+
+  // データ取得
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [productsData, categoriesData] = await Promise.all([
+          getProducts(),
+          getCategories()
+        ]);
+        setProducts(productsData);
+        setCategories(categoriesData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('データの取得に失敗しました:', error);
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   // URLからパラメータを取得して状態を設定
   useEffect(() => {
     const category = searchParams.get('category');
@@ -186,7 +127,15 @@ const ProductListPage: React.FC = () => {
     }
 
     setFilteredProducts(result);
-  }, [selectedCategory, searchQuery, sortOption]);
+  }, [selectedCategory, searchQuery, sortOption, products]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>商品を読み込んでいます...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="product-list-page">
@@ -223,6 +172,7 @@ const ProductListPage: React.FC = () => {
                 }}
                 className="filter-select"
               >
+                <option value="すべて">すべて</option>
                 {categories.map(category => (
                   <option key={category.id} value={category.name}>
                     {category.name}
@@ -257,22 +207,41 @@ const ProductListPage: React.FC = () => {
         </div>
 
         <div className="product-grid">
-          {filteredProducts.map(product => (
-            <div className="card product-card" key={product.id}>
-              <div className="card-image">
-                <img src={product.imageUrl} alt={product.name} />
-                {!product.inStock && <div className="out-of-stock">売切れ</div>}
+          {filteredProducts.map(product => {
+            const stock = checkProductStock(product.id);
+            const inStock = stock > 0;
+            const displayPrice = currentUser ? product.memberPrice : product.price;
+
+            return (
+              <div className="card product-card" key={product.id}>
+                <div className="card-image">
+                  <img src={product.imageUrl} alt={product.name} />
+                  {!inStock && <div className="out-of-stock">売切れ</div>}
+                  {product.new && <div className="product-badge new">新着</div>}
+                  {product.featured && <div className="product-badge featured">注目</div>}
+                </div>
+                <div className="card-body">
+                  <div className="product-category">{product.category}</div>
+                  <h3 className="card-title">{product.name}</h3>
+                  <div className="card-price">
+                    {currentUser && displayPrice < product.price && (
+                      <>
+                        <span className="original-price">¥{product.price.toLocaleString()}</span>
+                        <span className="member-price">会員価格: </span>
+                      </>
+                    )}
+                    ¥{displayPrice.toLocaleString()}
+                  </div>
+                  {inStock && stock <= 5 && (
+                    <div className="stock-warning">残り{stock}点</div>
+                  )}
+                  <Link to={`/products/${product.id}`} className="btn">
+                    詳細を見る
+                  </Link>
+                </div>
               </div>
-              <div className="card-body">
-                <div className="product-category">{product.category}</div>
-                <h3 className="card-title">{product.name}</h3>
-                <div className="card-price">¥{product.price.toLocaleString()}</div>
-                <Link to={`/products/${product.id}`} className="btn">
-                  詳細を見る
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {filteredProducts.length === 0 && (
