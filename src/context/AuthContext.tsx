@@ -8,7 +8,8 @@ import {
   getCurrentUser as serviceGetCurrentUser,
   updateUser as serviceUpdateUser,
   getSessionUser,
-  addPoints
+  addPoints,
+  resetPassword as serviceResetPassword
 } from '../services/userService';
 import { migrateGuestCart } from '../services/cartService';
 
@@ -20,7 +21,7 @@ interface AuthContextType {
   register: (userData: RegisterUserData) => Promise<{ success: boolean; message?: string; user?: UserProfile }>;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
-  resetPassword: (email: string) => Promise<{ success: boolean; message?: string }>;
+  resetPassword: (email: string, newPassword?: string) => Promise<{ success: boolean; message?: string; newPassword?: string }>;
   updateUserProfile: (userData: Partial<UserProfile>) => Promise<{ success: boolean; message?: string }>;
   refreshUser: () => void;
 }
@@ -107,14 +108,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setCurrentUser(null);
   };
 
-  // パスワードリセット（デモ用簡易実装）
-  const resetPassword = async (email: string): Promise<{ success: boolean; message?: string }> => {
-    // デモ用なので実際のパスワードリセットは行わない
-    // 本番環境では、メール送信などの処理を実装する
-    return { 
-      success: true, 
-      message: 'パスワードリセットメールを送信しました（デモ版のため実際には送信されません）' 
-    };
+  // パスワードリセット
+  const resetPassword = async (email: string, newPassword?: string): Promise<{ success: boolean; message?: string; newPassword?: string }> => {
+    try {
+      // userServiceのresetPassword関数を使用
+      const result = serviceResetPassword(email, newPassword);
+      return result;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'パスワードリセットに失敗しました';
+      return { success: false, message };
+    }
   };
 
   // ユーザープロフィールの更新

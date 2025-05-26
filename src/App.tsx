@@ -18,6 +18,7 @@ import RegisterPage from './pages/RegisterPage';
 import MyPage from './pages/MyPage';
 import OrderCompletePage from './pages/OrderCompletePage';
 import NotFoundPage from './pages/NotFoundPage';
+import PasswordResetPage from './pages/PasswordResetPage';
 
 // 管理者ページ
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -74,7 +75,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/mypage/*" element={<MyPage />} />
-              <Route path="/reset-password" element={<LoginPage resetMode={true} />} />
+              <Route path="/reset-password" element={<PasswordResetPage />} />
               <Route path="/account-closure-complete" element={<div className="container">
                 <div className="auth-success">
                   <h1>退会処理が完了しました</h1>

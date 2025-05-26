@@ -206,6 +206,44 @@ export const usePoints = (userId: string, points: number, reason: string): boole
   return true;
 };
 
+// パスワードリセット
+export const resetPassword = (email: string, newPassword?: string): { success: boolean; message?: string; newPassword?: string } => {
+  // 全ユーザー取得して検索
+  const users = getAllUsers();
+  const user = Object.values(users).find(u => u.email === email);
+  
+  if (!user) {
+    return {
+      success: false,
+      message: 'このメールアドレスは登録されていません'
+    };
+  }
+  
+  // 新しいパスワードが指定されている場合は設定
+  if (newPassword) {
+    user.password = newPassword;
+    setItem(`${KEYS.USER_PREFIX}${user.id}`, user);
+    logUserActivity(user.id, 'PASSWORD_RESET', { email });
+    
+    return {
+      success: true,
+      message: 'パスワードがリセットされました'
+    };
+  }
+  
+  // 新しいパスワードが指定されていない場合はランダム生成（後方互換性のため）
+  const generatedPassword = Math.random().toString(36).substr(2, 8) + Math.random().toString(36).substr(2, 4);
+  user.password = generatedPassword;
+  setItem(`${KEYS.USER_PREFIX}${user.id}`, user);
+  logUserActivity(user.id, 'PASSWORD_RESET', { email });
+  
+  return {
+    success: true,
+    message: `パスワードをリセットしました。デモ版のため、新しいパスワードを画面に表示します。`,
+    newPassword: generatedPassword
+  };
+};
+
 // ユーザー削除（退会処理）
 export const deleteUser = (userId: string): boolean => {
   const user = getItem<UserProfile | null>(`${KEYS.USER_PREFIX}${userId}`, null);
